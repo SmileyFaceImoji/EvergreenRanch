@@ -27,17 +27,31 @@ namespace EvergreenRanch.Controllers
         [HttpGet]
         public IActionResult AddAnimal()
         {
-            ViewBag.AnimalTypes = Enum.GetNames(typeof(TypeAnimal)).ToList();
-            ViewBag.AnimalHealthStatuses = Enum.GetNames(typeof(StatusHealth)).ToList();
+            ViewBag.AnimalTypes = Enum.GetValues<TypeAnimal>();
+            ViewBag.HealthStatuses = Enum.GetValues<StatusHealth>();
+            ViewBag.CurrentStatuses = Enum.GetValues<StatusAnimal>();
+            ViewBag.Genders = Enum.GetNames<TypeGender>();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddAnimal(IFormCollection form)
+        public IActionResult AddAnimal(IFormCollection form)
         {
             try
             {
+                byte[] pictureBytes = null;
+                var file = form.Files["Picture"];
+                if (file?.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        file.CopyTo(ms);
+                        pictureBytes = ms.ToArray();
+                    }
+                }
+
+                // Create new Animal object
                 var animal = new Animal
                 {
                     AnimalTag = form["AnimalTag"],
@@ -46,28 +60,26 @@ namespace EvergreenRanch.Controllers
                     WeightKg = decimal.Parse(form["WeightKg"]),
                     AgeInMonths = int.Parse(form["AgeInMonths"]),
                     HealthStatus = Enum.Parse<StatusHealth>(form["HealthStatus"]),
-                    IsListedForSale = form["IsListedForSale"] == "on",
-                    MarketPrice = decimal.Parse(form["MarketPrice"]),
-                    DateAdded = DateTime.UtcNow
+                    CurrentStatus = Enum.Parse<StatusAnimal>(form["CurrentStatus"]),
+                    IsListedForSale = form["IsListedForSale"].Contains("true"),
+                    Picture = pictureBytes,
+                    MarketPrice = decimal.Parse(form["MarketPrice"])
                 };
 
-                var file = Request.Form.Files["PictureFile"];
-                if (file != null && file.Length > 0)
-                {
-                    using var ms = new MemoryStream();
-                    await file.CopyToAsync(ms);
-                    animal.Picture = ms.ToArray();
-                }
-
                 _context.Animals.Add(animal);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Dashboard));
+                _context.SaveChanges();
+
+                return RedirectToAction("ForSale");  // Redirect to listing
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Failed to save: " + ex.Message);
-                ViewBag.AnimalTypes = Enum.GetNames(typeof(TypeAnimal)).ToList();
-                ViewBag.AnimalHealthStatuses = Enum.GetNames(typeof(StatusHealth)).ToList();
+                // Repopulate dropdowns and return view with error
+                ViewBag.AnimalTypes = Enum.GetValues<TypeAnimal>();
+                ViewBag.HealthStatuses = Enum.GetValues<StatusHealth>();
+                ViewBag.CurrentStatuses = Enum.GetValues<StatusAnimal>();
+                ViewBag.Genders = Enum.GetNames<TypeGender>();
+
+                ModelState.AddModelError("", $"Error: {ex.Message}");
                 return View();
             }
         }

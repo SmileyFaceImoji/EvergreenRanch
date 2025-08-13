@@ -1,26 +1,35 @@
-﻿namespace EvergreenRanch.Models.Common
+﻿using EvergreenRanch.Utilities;
+
+namespace EvergreenRanch.Models.Common
 {
     public enum TypeAnimal
     {
-        Cow,
-        Goat,
-        Pig,
-        Chicken
-    }
-
-    public enum StatusAnimal
-    {
-        ForSale,
-        Deceased,
-        Sold
+        [EnumDisplayName("Cattle")] Cattle,
+        [EnumDisplayName("Sheep")] Sheep,
+        [EnumDisplayName("Goat")] Goat,
+        [EnumDisplayName("Horse")] Horse,
+        [EnumDisplayName("Pig")] Pig,
+        [EnumDisplayName("Chicken")] Chicken
     }
 
     public enum StatusHealth
     {
-        Healthy,
-        Observing,
-        Sick,
-        InTreatment,
-        Recovered 
+        [EnumDisplayName("Healthy")] Healthy,
+        [EnumDisplayName("Sick")] Sick,
+        [EnumDisplayName("Injured")] Injured,
+        [EnumDisplayName("Recovering")] Recovering
+    }
+
+    public enum StatusAnimal
+    {
+        [EnumDisplayName("Available")] ForSale,
+        [EnumDisplayName("Sold")] Sold,
+        [EnumDisplayName("Not for Sale")] NotForSale
+    }
+
+    public enum TypeGender
+    {
+        Male,
+        Female
     }
 }

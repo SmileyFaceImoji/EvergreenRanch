@@ -8,34 +8,32 @@ namespace EvergreenRanch.Models.ViewModels
 {
     public class AddAnimalVM
     {
-        [Required]
+        [Required(ErrorMessage = "Tag is required")]
         public string AnimalTag { get; set; }
 
-        [Required]
-        public TypeAnimal AnimalTypeID { get; set; }
+        [Required(ErrorMessage = "Type is required")]
+        public TypeAnimal AnimalType { get; set; }
 
-        [Required]
-        public string Gender { get; set; }
+        [Required(ErrorMessage = "Gender is required")]
+        public TypeGender Gender { get; set; }
 
-        [Required]
+        [Range(0.1, 1000, ErrorMessage = "Weight must be between 0.1-1000 kg")]
         public decimal WeightKg { get; set; }
 
-        [Required]
+        [Range(1, 360, ErrorMessage = "Age must be 1-360 months")]
         public int AgeInMonths { get; set; }
 
+        [Required(ErrorMessage = "Health status is required")]
         public StatusHealth HealthStatus { get; set; }
 
-        public StatusAnimal CurrentStatus { get; set; } = 0;
+        [Required(ErrorMessage = "Status is required")]
+        public StatusAnimal CurrentStatus { get; set; }
 
-        public bool IsListedForSale { get; set; }
-
-        public IFormFile PictureFile { get; set; }
-
-        [Required]
+        [Range(10, 100000, ErrorMessage = "Price must be $10-$100,000")]
         public decimal MarketPrice { get; set; }
 
-        public IEnumerable<SelectListItem> AnimalTypes { get; set; }
-        public IEnumerable<SelectListItem> AnimalHealthStatuses { get; set; }
-
+        [Required(ErrorMessage = "Image is required")]
+        [DataType(DataType.Upload)]
+        public IFormFile ImageFile { get; set; }
     }
 }
