@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EvergreenRanch.Data;
+using EvergreenRanch.Services;
 
 public class Program
 {
@@ -33,6 +34,9 @@ public class Program
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<CartService>();
 
         var app = builder.Build();
 

@@ -32,6 +32,6 @@ namespace EvergreenRanch.Models
         }
 
         public DateTime? DeliveredAt { get; set; }
-        public string DriverUserId { get; set; }
+        public string? DriverUserId { get; set; }
     }
 }
