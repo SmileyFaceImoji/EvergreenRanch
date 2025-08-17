@@ -4,6 +4,7 @@ using EvergreenRanch.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvergreenRanch.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250814091810_Adding Returns Model")]
+    partial class AddingReturnsModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,6 +59,9 @@ namespace EvergreenRanch.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(24)");
 
+                    b.Property<bool>("IsListedForSale")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("MarketPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -69,38 +75,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.HasKey("AnimalID");
 
                     b.ToTable("Animals");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.HealthCheck", b =>
-                {
-                    b.Property<int>("HealthCheckId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HealthCheckId"));
-
-                    b.Property<int>("AnimalId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Completed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ScheduledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("VetUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HealthCheckId");
-
-                    b.HasIndex("AnimalId");
-
-                    b.ToTable("HealthChecks");
                 });
 
             modelBuilder.Entity("EvergreenRanch.Models.Order", b =>
@@ -143,19 +117,6 @@ namespace EvergreenRanch.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("RecievedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("RecievedByCustomer")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecretKey")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StripePaymentIntentId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("StripeSessionId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -170,34 +131,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.OrderFeedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comments")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderFeedbacks");
                 });
 
             modelBuilder.Entity("EvergreenRanch.Models.OrderItem", b =>
@@ -227,35 +160,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.ReturnImage", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("ImageData")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("ReturnId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReturnRequestsReturnId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("ReturnRequestsReturnId");
-
-                    b.ToTable("ReturnImages");
                 });
 
             modelBuilder.Entity("EvergreenRanch.Models.ReturnRequests", b =>
@@ -293,6 +197,7 @@ namespace EvergreenRanch.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("StripeRefundId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -510,28 +415,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EvergreenRanch.Models.HealthCheck", b =>
-                {
-                    b.HasOne("EvergreenRanch.Models.Animal", "Animal")
-                        .WithMany()
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.OrderFeedback", b =>
-                {
-                    b.HasOne("EvergreenRanch.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("EvergreenRanch.Models.OrderItem", b =>
                 {
                     b.HasOne("EvergreenRanch.Models.Animal", "Animal")
@@ -549,17 +432,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.Navigation("Animal");
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.ReturnImage", b =>
-                {
-                    b.HasOne("EvergreenRanch.Models.ReturnRequests", "ReturnRequests")
-                        .WithMany("Images")
-                        .HasForeignKey("ReturnRequestsReturnId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ReturnRequests");
                 });
 
             modelBuilder.Entity("EvergreenRanch.Models.ReturnRequests", b =>
@@ -635,11 +507,6 @@ namespace EvergreenRanch.Data.Migrations
             modelBuilder.Entity("EvergreenRanch.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.ReturnRequests", b =>
-                {
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

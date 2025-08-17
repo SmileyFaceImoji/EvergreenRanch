@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Select Health Check Date";
+}
+
+<h2>Select Health Check Date</h2>
+
+@using (Html.BeginForm("SelectHealthDate", "Vet", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="animalId" value="@ViewBag.AnimalId" />
+    <input type="date" name="selectedDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+    <input type="submit" value="Select Date" class="btn btn-outline-success" />
+}

@@ -22,7 +22,6 @@ namespace EvergreenRanch.Models
 
         [Column(TypeName = "nvarchar(24)")]
         public StatusAnimal CurrentStatus { get; set; }  
-        public bool IsListedForSale { get; set; }
         public byte[] Picture { get; set; }
         public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public decimal MarketPrice { get; set; }

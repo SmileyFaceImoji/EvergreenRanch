@@ -13,5 +13,9 @@ namespace EvergreenRanch.Data
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> Items { get; set; }
+        public DbSet<ReturnRequests> ReturnRequests { get; set; }
+        public DbSet<ReturnImage> ReturnImages { get; set; }
+        public DbSet<HealthCheck> HealthChecks { get; set; }
+        public DbSet<OrderFeedback> OrderFeedbacks { get; set; }
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
 using System.Security.Claims;
+using EvergreenRanch.Utilities;
+
 
 namespace EvergreenRanch.Controllers
 {
@@ -139,6 +141,8 @@ namespace EvergreenRanch.Controllers
                 return RedirectToAction("Cancel");
             }
 
+            var paymentIntentId = session.PaymentIntentId;
+
             // Get cart items
             var cartItemIds = _cart.GetCartItems();
             var animals = _context.Animals
@@ -149,7 +153,6 @@ namespace EvergreenRanch.Controllers
             foreach (var animal in animals)
             {
                 animal.CurrentStatus = StatusAnimal.Sold;
-                animal.IsListedForSale = false;
             }
 
             // Get shipping info from session
@@ -160,6 +163,7 @@ namespace EvergreenRanch.Controllers
             var order = new Order
             {
                 StripeSessionId = session_id,
+                StripePaymentIntentId = paymentIntentId,
                 TotalAmount = animals.Sum(a => a.MarketPrice) * (1 + TaxRate),
                 UserId = userId,
                 FullName = shippingInfo.FullName,
@@ -171,7 +175,8 @@ namespace EvergreenRanch.Controllers
                 {
                     AnimalID = a.AnimalID,
                     UnitPrice = a.MarketPrice
-                }).ToList()
+                }).ToList(),
+                SecretKey = RandomisorExtension.GenerateRandom(8, RandomCharType.Uppercase | RandomCharType.Lowercase | RandomCharType.Digit)
             };
 
             _context.Orders.Add(order);

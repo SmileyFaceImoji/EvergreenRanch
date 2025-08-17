@@ -32,4 +32,13 @@ namespace EvergreenRanch.Models.Common
         Male,
         Female
     }
+
+    public enum RandomCharType
+    {
+        None = 0,
+        Uppercase = 1,
+        Lowercase = 2,
+        Digit = 4,
+        Special = 8
+    }
 }

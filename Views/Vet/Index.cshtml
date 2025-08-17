@@ -1,0 +1,57 @@
+﻿@model IEnumerable<HealthCheck>
+
+@{
+    ViewData["Title"] = "Vet Appointments";
+}
+
+<h1>Vet Appointments</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Animal</th>
+            <th>Date & Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Animal.AnimalTag</td>
+                <td>@item.ScheduledDate.ToString("g")</td>
+                <td>
+                    @if (item.Completed)
+                    {
+                        <span class="badge bg-success">Completed</span>
+                    }
+                    else if (item.ScheduledDate < DateTime.Now)
+                    {
+                        <span class="badge bg-warning">Missed</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-info">Upcoming</span>
+                    }
+                </td>
+                <td>
+                    @if (!item.Completed)
+                    {
+                        <a asp-action="Complete" asp-route-id="@item.HealthCheckId"
+                           class="btn btn-sm btn-primary">
+                            <i class="fas fa-file-medical"></i> Complete Checkup
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.HealthCheckId"
+                           class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

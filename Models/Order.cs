@@ -9,6 +9,7 @@ namespace EvergreenRanch.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int OrderId { get; set; }
         public string StripeSessionId { get; set; }
+        public string? StripePaymentIntentId { get; set; } // Give this to stripe to trigger the refund process
         public decimal TotalAmount { get; set; }
         public StatusOrder OrderStatus { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
@@ -33,5 +34,11 @@ namespace EvergreenRanch.Models
 
         public DateTime? DeliveredAt { get; set; }
         public string? DriverUserId { get; set; }
+
+
+        //Customer confirming they recieved it(Migration is done)
+        public required string SecretKey { get; set; }
+        public bool RecievedByCustomer {  get; set; }
+        public DateTime? RecievedAt { get; set; }
     }
 }

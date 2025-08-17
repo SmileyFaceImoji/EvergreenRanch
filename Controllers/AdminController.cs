@@ -61,7 +61,6 @@ namespace EvergreenRanch.Controllers
                     AgeInMonths = int.Parse(form["AgeInMonths"]),
                     HealthStatus = Enum.Parse<StatusHealth>(form["HealthStatus"]),
                     CurrentStatus = Enum.Parse<StatusAnimal>(form["CurrentStatus"]),
-                    IsListedForSale = form["IsListedForSale"].Contains("true"),
                     Picture = pictureBytes,
                     MarketPrice = decimal.Parse(form["MarketPrice"])
                 };
@@ -69,7 +68,7 @@ namespace EvergreenRanch.Controllers
                 _context.Animals.Add(animal);
                 _context.SaveChanges();
 
-                return RedirectToAction("ForSale");  // Redirect to listing
+                return RedirectToAction("","Purchase");  // Redirect to listing
             }
             catch (Exception ex)
             {

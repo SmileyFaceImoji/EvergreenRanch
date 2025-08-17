@@ -30,9 +30,6 @@
             <dt class="col-sm-4">Current Status:</dt>
             <dd class="col-sm-8">@Model.CurrentStatus.GetEnumDisplayName()</dd>
 
-            <dt class="col-sm-4">Listed for Sale:</dt>
-            <dd class="col-sm-8">@(Model.IsListedForSale ? "Yes" : "No")</dd>
-
             <dt class="col-sm-4">Market Price:</dt>
             <dd class="col-sm-8">@Model.MarketPrice.ToString("C")</dd>
 
@@ -61,7 +58,7 @@
         <i class="fas fa-arrow-left"></i> Back to Animals For Sale
     </a>
 
-    @if (Model.CurrentStatus == StatusAnimal.ForSale && Model.IsListedForSale)
+    @if (Model.CurrentStatus == StatusAnimal.ForSale)
     {
         <a href="@Url.Action("AddToCart", "Purchase", new { animalId = Model.AnimalID })"
            class="btn btn-success ml-2">
@@ -73,8 +70,18 @@
         <div class="alert alert-warning mt-3 d-inline-block ml-2">
             This animal is not available for purchase
         </div>
+
+        <!-- Schedule Vet Appointment button (UC 15) -->
+        <form asp-action="SelectHealthDate" asp-controller="Vet" method="post" class="d-inline-block ml-2">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="animalId" value="@Model.AnimalID" />
+            <button type="submit" class="btn btn-warning">
+                <i class="fas fa-stethoscope"></i> Schedule Vet Appointment
+            </button>
+        </form>
     }
 </div>
+
 
 @section Scripts {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

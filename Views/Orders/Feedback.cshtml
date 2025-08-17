@@ -1,0 +1,28 @@
+﻿@model EvergreenRanch.Models.OrderFeedback
+
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+<div class="container mt-4">
+    <h2>Leave Feedback</h2>
+    <p>Thank you for confirming your order. Please leave your feedback below:</p>
+
+    <form asp-action="Feedback" method="post" class="shadow-sm p-4 bg-light rounded">
+        <input type="hidden" asp-for="OrderId" />
+
+        <div class="mb-3">
+            <label asp-for="Rating" class="form-label">Rating (1-5)</label>
+            <input asp-for="Rating" type="number" min="1" max="5" class="form-control" required />
+            <span asp-validation-for="Rating" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Comments" class="form-label">Comments</label>
+            <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Comments" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+</div>

@@ -1,0 +1,15 @@
+﻿@model Animal
+
+<dl class="row">
+    <dt class="col-5">Animal Type:</dt>
+    <dd class="col-7">@Model.AnimalTypeID.GetEnumDisplayName()</dd>
+
+    <dt class="col-5">Age:</dt>
+    <dd class="col-7">@Model.AgeInMonths months</dd>
+
+    <dt class="col-5">Weight:</dt>
+    <dd class="col-7">@Model.WeightKg kg</dd>
+
+    <dt class="col-5">Medical History:</dt>
+    <dd class="col-7">@(string.IsNullOrEmpty(Model.CurrentStatus.GetEnumDisplayName()))</dd>
+</dl>

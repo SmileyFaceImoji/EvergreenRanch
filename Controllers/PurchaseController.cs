@@ -17,11 +17,19 @@ namespace EvergreenRanch.Controllers
         }
         public IActionResult Index()
         {
-            var animals = _context.Animals
-                .Where(a => a.IsListedForSale)
-                .ToList();
+            var animals = _context.Animals.ToList();
+            if (User.IsInRole("Admin"))
+            {
+                return View(animals);
+            }
+            else
+            {
+                var AnimalsForSale = animals
+                    .Where(a => a.CurrentStatus == StatusAnimal.ForSale)
+                    .ToList();
 
-            return View(animals);
+                return View(AnimalsForSale);
+            }
         }
 
         public IActionResult Details(int? id)
@@ -53,7 +61,7 @@ namespace EvergreenRanch.Controllers
         {
             var animal = _context.Animals.FirstOrDefault(a => a.AnimalID == animalId);
 
-            if (animal == null || animal.CurrentStatus != StatusAnimal.ForSale || !animal.IsListedForSale)
+            if (animal == null || animal.CurrentStatus != StatusAnimal.ForSale)
             {
                 TempData["ErrorMessage"] = "This animal is no longer available for purchase";
                 return RedirectToAction("Details", new { id = animalId });
