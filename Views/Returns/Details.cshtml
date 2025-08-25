@@ -11,22 +11,27 @@
     <div class="row">
         <!-- Left Column: Return Details -->
         <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Return Details</h5>
-                </div>
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">Return Details</div>
                 <div class="card-body">
                     <dl class="row">
                         <dt class="col-sm-4">Status:</dt>
-                        <dd class="col-sm-8">@Model.Status</dd>
+                        <dd class="col-sm-8">
+                            <span class="badge
+                                @(Model.Status == ReturnRequests.ReturnStatus.Refunded ? "bg-success" :
+                                                                    Model.Status == ReturnRequests.ReturnStatus.Rejected ? "bg-danger" :
+                                                                    Model.Status == ReturnRequests.ReturnStatus.Approved ? "bg-primary" : "bg-warning text-dark")">
+                                @Model.Status
+                            </span>
+                        </dd>
 
                         <dt class="col-sm-4">Request Date:</dt>
-                        <dd class="col-sm-8">@Model.RequestDate.ToString("g")</dd>
+                        <dd class="col-sm-8">@Model.RequestDate.ToString("f")</dd>
 
                         @if (Model.ResolutionDate.HasValue)
                         {
                             <dt class="col-sm-4">Resolution Date:</dt>
-                            <dd class="col-sm-8">@Model.ResolutionDate.Value.ToString("g")</dd>
+                            <dd class="col-sm-8">@Model.ResolutionDate.Value.ToString("f")</dd>
                         }
 
                         @if (Model.RefundAmount.HasValue)
@@ -48,10 +53,8 @@
             </div>
 
             <!-- Evidence Images -->
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Evidence Images</h5>
-                </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">Evidence Images</div>
                 <div class="card-body">
                     @if (Model.Images != null && Model.Images.Any())
                     {
@@ -63,7 +66,8 @@
                                     <div class="col-6 col-md-4">
                                         <a href="data:@img.ContentType;base64,@Convert.ToBase64String(img.ImageData)" target="_blank">
                                             <img src="data:@img.ContentType;base64,@Convert.ToBase64String(img.ImageData)"
-                                                 class="img-fluid rounded border" style="max-height: 150px; object-fit: cover;" />
+                                                 class="img-fluid rounded border shadow-sm hover-zoom"
+                                                 style="max-height: 150px; object-fit: cover;" />
                                         </a>
                                     </div>
                                 }
@@ -80,45 +84,41 @@
 
         <!-- Right Column: Order & Animal Info -->
         <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Order Details</h5>
-                </div>
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">Order Details</div>
                 <div class="card-body">
                     <dl class="row">
                         <dt class="col-sm-4">Order ID:</dt>
-                        <dd class="col-sm-8">@Model.Order?.OrderId.ToString() ?? "N/A"</dd>
+                        <dd class="col-sm-8">@Model.Order?.OrderId.ToString() ?? "<span class='text-muted'>N/A</span>"</dd>
 
                         <dt class="col-sm-4">Order Date:</dt>
-                        <dd class="col-sm-8">@Model.Order?.OrderDate.ToString("d") ?? "N/A"</dd>
+                        <dd class="col-sm-8">@Model.Order?.OrderDate.ToString("d") ?? "<span class='text-muted'>N/A</span>"</dd>
 
                         <dt class="col-sm-4">Stripe Session:</dt>
-                        <dd class="col-sm-8">@Model.Order?.StripeSessionId ?? "N/A"</dd>
+                        <dd class="col-sm-8">@Model.Order?.StripeSessionId ?? "<span class='text-muted'>N/A</span>"</dd>
                     </dl>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Animal Details</h5>
-                </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">Animal Details</div>
                 <div class="card-body">
                     <dl class="row">
                         <dt class="col-sm-4">Tag:</dt>
-                        <dd class="col-sm-8">@Model.Animal?.AnimalTag ?? "N/A"</dd>
+                        <dd class="col-sm-8">@Model.Animal?.AnimalTag ?? "<span class='text-muted'>N/A</span>"</dd>
 
                         <dt class="col-sm-4">Type:</dt>
                         <dd class="col-sm-8">
                             @(Model.Animal != null
-                                ? Model.Animal.AnimalTypeID.GetEnumDisplayName()
-                                : "N/A")
+                                                        ? Model.Animal.AnimalTypeID.GetEnumDisplayName()
+                                                        : "<span class='text-muted'>N/A</span>")
                         </dd>
 
                         <dt class="col-sm-4">Price:</dt>
                         <dd class="col-sm-8">
                             @(Model.Animal != null
-                                ? Model.Animal.MarketPrice.ToString("C")
-                                : "N/A")
+                                                        ? Model.Animal.MarketPrice.ToString("C")
+                                                        : "<span class='text-muted'>N/A</span>")
                         </dd>
                     </dl>
 
@@ -126,7 +126,7 @@
                     {
                         <div class="text-center mt-3">
                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Animal.Picture)"
-                                 class="img-fluid rounded" style="max-height: 200px;" />
+                                 class="img-fluid rounded shadow-sm" style="max-height: 200px; object-fit: cover;" />
                         </div>
                     }
                 </div>
@@ -135,7 +135,7 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="mt-4 d-flex gap-2">
+    <div class="mt-4 d-flex flex-wrap gap-2">
         <form asp-action="Approve" asp-route-id="@Model.ReturnId" method="post">
             @Html.AntiForgeryToken()
             <button type="submit" class="btn btn-success">
@@ -150,6 +150,8 @@
             </button>
         </form>
 
-        <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back
+        </a>
     </div>
 </div>

@@ -1,4 +1,4 @@
-﻿using EvergreenRanch.Data;
+﻿ using EvergreenRanch.Data;
 using EvergreenRanch.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

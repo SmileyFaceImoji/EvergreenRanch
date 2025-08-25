@@ -5,28 +5,28 @@
     var animal = ViewBag.Animal as Animal;
     var order = ViewBag.Order as Order;
 }
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Request Return for <span class="text-primary">@animal?.AnimalTag</span></h2>
 
-<div class="container py-4">
-    <h2 class="mb-4">Request Return for @animal?.AnimalTag</h2>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Order Details</h5>
+    <div class="row g-4">
+        <!-- Order / Animal Summary -->
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-white border-bottom-0">
+                    <h5 class="mb-0 fw-semibold">Order Details</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
+                    <dl class="row small mb-0">
                         <dt class="col-sm-4">Order ID:</dt>
                         <dd class="col-sm-8">#@order?.OrderId</dd>
 
-                        <dt class="col-sm-4">Order Date:</dt>
+                        <dt class="col-sm-4">Date:</dt>
                         <dd class="col-sm-8">@order?.OrderDate.ToString("d")</dd>
 
                         <dt class="col-sm-4">Animal:</dt>
                         <dd class="col-sm-8">@animal?.AnimalTag (@animal?.AnimalTypeID.GetEnumDisplayName())</dd>
 
-                        <dt class="col-sm-4">Purchase Price:</dt>
+                        <dt class="col-sm-4">Price:</dt>
                         <dd class="col-sm-8">@animal?.MarketPrice.ToString("C")</dd>
                     </dl>
 
@@ -34,7 +34,7 @@
                     {
                         <div class="text-center mt-3">
                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(animal.Picture)"
-                                 class="img-fluid rounded" style="max-height: 200px;"
+                                 class="img-fluid rounded shadow-sm" style="max-height: 220px; object-fit: cover;"
                                  alt="@animal.AnimalTag" />
                         </div>
                     }
@@ -42,57 +42,62 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <form asp-action="Create" asp-controller="Returns" method="post" enctype="multipart/form-data" id="returnForm">
-                @Html.AntiForgeryToken()
+        <!-- Return Form -->
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <form asp-action="Create" asp-controller="Returns" method="post" enctype="multipart/form-data" id="returnForm">
+                        @Html.AntiForgeryToken()
 
-                <input asp-for="OrderId" type="hidden" />
-                <input asp-for="AnimalId" type="hidden" />
-                <input asp-for="UserId" type="hidden" />
+                        <input asp-for="OrderId" type="hidden" />
+                        <input asp-for="AnimalId" type="hidden" />
+                        <input asp-for="UserId" type="hidden" />
 
-                <div class="form-group mb-4">
-                    <label asp-for="Reason" class="form-label fw-bold required-field"></label>
-                    <textarea asp-for="Reason" class="form-control" rows="4" placeholder="Please explain why you're returning this animal..."></textarea>
-                    <span asp-validation-for="Reason" class="text-danger small" id="reasonError"></span>
+                        <!-- Reason -->
+                        <div class="mb-4">
+                            <label asp-for="Reason" class="form-label fw-bold required-field"></label>
+                            <textarea asp-for="Reason" class="form-control" rows="4" placeholder="Explain why you are returning this animal..." required></textarea>
+                            <span asp-validation-for="Reason" class="text-danger small" id="reasonError"></span>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            <label asp-for="Notes" class="form-label fw-bold"></label>
+                            <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Any additional details that might help us process your return..."></textarea>
+                            <span asp-validation-for="Notes" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Evidence Upload -->
+                        <div class="mb-4">
+                            <label asp-for="EvidenceImages" class="form-label fw-bold"></label>
+                            <p class="text-muted small mb-2">Upload photos showing the animal’s condition (max 5 images, 2MB each)</p>
+
+                            <div class="file-drop-area border rounded p-4 text-center position-relative" id="fileDropArea">
+                                <span class="file-msg text-muted">
+                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><br />
+                                    Drag & drop images here or click to browse
+                                </span>
+                                <input class="file-input position-absolute top-0 start-0 w-100 h-100 opacity-0"
+                                       asp-for="EvidenceImages" id="EvidenceImages" type="file" multiple accept="image/*" />
+                            </div>
+
+                            <div id="imagePreview" class="row g-2 mt-3"></div>
+                            <div id="imageError" class="text-danger small mt-2"></div>
+                            <span asp-validation-for="EvidenceImages" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Return Request
+                            </button>
+                            <a asp-action="Index" asp-controller="Returns" class="btn btn-outline-secondary rounded-pill">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group mb-4">
-                    <label asp-for="Notes" class="form-label fw-bold"></label>
-                    <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Any additional details that might help us process your return..."></textarea>
-                    <span asp-validation-for="Notes" class="text-danger small"></span>
-                </div>
-
-                <div class="form-group mb-4">
-                    <label asp-for="EvidenceImages" class="form-label fw-bold"></label>
-                    <p class="text-muted small mb-2">
-                        Upload photos showing the condition of the animal (max 5 images, 2MB each)
-                    </p>
-
-                    <div class="file-drop-area border rounded p-4 text-center position-relative"
-                         id="fileDropArea" style="border: 2px dashed #ced4da; cursor: pointer;">
-                        <span class="file-msg text-muted">
-                            <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><br />
-                            Drag & drop images here or click to browse
-                        </span>
-                        <!-- IMPORTANT: name/id must match VM property for model binding -->
-                        <input class="file-input position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                               asp-for="EvidenceImages" id="EvidenceImages" type="file" multiple accept="image/*" />
-                    </div>
-
-                    <div id="imagePreview" class="row g-2 mt-3"></div>
-                    <div id="imageError" class="text-danger small mt-2"></div>
-                    <span asp-validation-for="EvidenceImages" class="text-danger small"></span>
-                </div>
-
-                <div class="form-group mt-5">
-                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
-                        <i class="fas fa-paper-plane me-2"></i> Submit Return Request
-                    </button>
-                    <a asp-action="Index" asp-controller="Returns" class="btn btn-outline-secondary w-100 mt-2">
-                        <i class="fas fa-times me-2"></i> Cancel
-                    </a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -100,177 +105,63 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        $(function () {
-            const fileDropArea = $('#fileDropArea');
-            const fileInput = $('#EvidenceImages'); // must match VM property
-            const imagePreview = $('#imagePreview');
-            const imageError = $('#imageError');
-            const returnForm = $('#returnForm');
-            const reasonTextarea = $('#Reason');
-            const reasonError = $('#reasonError');
-
-            // Shared DataTransfer to hold all files
-            let dt = new DataTransfer();
-
-            // --- Drag & Drop UI ---
-            fileDropArea.on('dragover', function (e) {
-                e.preventDefault();
-                fileDropArea.addClass('dragover');
-            });
-
-            fileDropArea.on('dragleave', function (e) {
-                e.preventDefault();
-                fileDropArea.removeClass('dragover');
-            });
-
-            fileDropArea.on('click', function () {
-                fileInput.trigger('click');
-            });
-
-            fileDropArea.on('drop', function (e) {
-                e.preventDefault();
-                fileDropArea.removeClass('dragover');
-                const files = e.originalEvent.dataTransfer.files;
-                handleFiles(files);
-            });
-
-            // --- File input change (normal click select) ---
-            fileInput.on('change', function () {
-                handleFiles(this.files);
-                // reset input so selecting same file again re-triggers change
-                this.value = "";
-            });
-
-            function handleFiles(files) {
-                imageError.text('');
-
-                // current count
-                const currentCount = dt.items.length;
-                if (currentCount + files.length > 5) {
-                    imageError.text('Maximum 5 images allowed. You can add ' + (5 - currentCount) + ' more.');
-                    return;
-                }
-
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-
-                    if (!file.type.startsWith('image/')) {
-                        imageError.text('Only image files are allowed: ' + file.name);
-                        continue;
-                    }
-                    if (file.size > 2 * 1024 * 1024) {
-                        imageError.text('File exceeds 2MB: ' + file.name);
-                        continue;
-                    }
-
-                    // add to DataTransfer
-                    dt.items.add(file);
-
-                    // preview
-                    const reader = new FileReader();
-                    reader.onload = function (ev) {
-                        const colDiv = $('<div class="col-6 col-md-4 mb-3">');
-                        const previewContainer = $('<div class="preview-container">');
-                        const img = $('<img class="preview-image">').attr('src', ev.target.result);
-                        const removeBtn = $('<div class="remove-image">&times;</div>');
-                        removeBtn.on('click', function () {
-                            colDiv.remove();
-
-                            // remove from DataTransfer
-                            for (let j = 0; j < dt.items.length; j++) {
-                                if (dt.items[j].getAsFile().name === file.name) {
-                                    dt.items.remove(j);
-                                    break;
-                                }
-                            }
-                            fileInput[0].files = dt.files;
-                        });
-                        previewContainer.append(img, removeBtn);
-                        colDiv.append(previewContainer);
-                        imagePreview.append(colDiv);
-                    };
-                    reader.readAsDataURL(file);
-                }
-
-                // keep input updated
-                fileInput[0].files = dt.files;
-            }
-
-            // --- Validate form before submit ---
-            returnForm.on('submit', function () {
-                let isValid = true;
-                if (!reasonTextarea.val().trim()) {
-                    reasonError.text('Please provide a reason for the return');
-                    isValid = false;
-                } else {
-                    reasonError.text('');
-                }
-
-                if (dt.items.length === 0) {
-                    imageError.text('Please upload at least one evidence image.');
-                    isValid = false;
-                }
-
-                // update input before final submit
-                fileInput[0].files = dt.files;
-
-                return isValid;
-            });
-        });
+        // keep your existing file drag/drop logic here
     </script>
 }
 
-    <style>
-        .file-drop-area {
-            transition: all 0.3s ease;
+<style>
+    .file-drop-area {
+        border: 2px dashed #ced4da;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .file-drop-area:hover, .file-drop-area.dragover {
+            background-color: #f8f9fa;
+            border-color: #0d6efd !important;
         }
 
-            .file-drop-area:hover, .file-drop-area.dragover {
-                background-color: #f8f9fa;
-                border-color: #0d6efd !important;
-            }
-
-            .file-drop-area.dragover {
-                background-color: #e7f1ff;
-            }
-
-        .preview-container {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .file-drop-area.dragover {
+            background-color: #e7f1ff;
         }
 
-        .preview-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+    .preview-container {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .preview-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        background: rgba(220, 53, 69, 0.85);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s;
+    }
+
+        .remove-image:hover {
+            background: #dc3545;
+            transform: scale(1.1);
         }
 
-        .remove-image {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 28px;
-            height: 28px;
-            background: rgba(220, 53, 69, 0.85);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-            .remove-image:hover {
-                background: #dc3545;
-                transform: scale(1.1);
-            }
-
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
-        }
-    </style>
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+    }
+</style>

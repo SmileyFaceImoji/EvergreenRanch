@@ -5,84 +5,131 @@
     ViewData["Title"] = "Animal Details";
 }
 
-<h2>Animal Details</h2>
-<div class="row">
-    <div class="col-md-6">
-        <dl class="row">
-            <dt class="col-sm-4">Animal Tag:</dt>
-            <dd class="col-sm-8">@Model.AnimalTag</dd>
+<div class="container py-4">
+    <h2 class="fw-bold text-center mb-4 text-dark">Animal Details</h2>
 
-            <dt class="col-sm-4">Type:</dt>
-            <dd class="col-sm-8">@Model.AnimalTypeID.GetEnumDisplayName()</dd>
+    <div class="row g-4">
+        <!-- Animal Information -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 fw-semibold text-muted">Animal Tag:</dt>
+                        <dd class="col-sm-8">@Model.AnimalTag</dd>
 
-            <dt class="col-sm-4">Gender:</dt>
-            <dd class="col-sm-8">@Model.Gender</dd>
+                        <dt class="col-sm-4 fw-semibold text-muted">Type:</dt>
+                        <dd class="col-sm-8">@Model.AnimalTypeID.GetEnumDisplayName()</dd>
 
-            <dt class="col-sm-4">Weight:</dt>
-            <dd class="col-sm-8">@Model.WeightKg kg</dd>
+                        <dt class="col-sm-4 fw-semibold text-muted">Gender:</dt>
+                        <dd class="col-sm-8">@Model.Gender</dd>
 
-            <dt class="col-sm-4">Age:</dt>
-            <dd class="col-sm-8">@Model.AgeInMonths months</dd>
+                        <dt class="col-sm-4 fw-semibold text-muted">Weight:</dt>
+                        <dd class="col-sm-8">@Model.WeightKg kg</dd>
 
-            <dt class="col-sm-4">Health Status:</dt>
-            <dd class="col-sm-8">@Model.HealthStatus.GetEnumDisplayName()</dd>
+                        <dt class="col-sm-4 fw-semibold text-muted">Age:</dt>
+                        <dd class="col-sm-8">@Model.AgeInMonths months</dd>
 
-            <dt class="col-sm-4">Current Status:</dt>
-            <dd class="col-sm-8">@Model.CurrentStatus.GetEnumDisplayName()</dd>
+                        <dt class="col-sm-4 fw-semibold text-muted">Health Status:</dt>
+                        <dd class="col-sm-8">@Model.HealthStatus.GetEnumDisplayName()</dd>
 
-            <dt class="col-sm-4">Market Price:</dt>
-            <dd class="col-sm-8">@Model.MarketPrice.ToString("C")</dd>
+                        <dt class="col-sm-4 fw-semibold text-muted">Current Status:</dt>
+                        <dd class="col-sm-8">@Model.CurrentStatus.GetEnumDisplayName()</dd>
 
-            <dt class="col-sm-4">Date Added:</dt>
-            <dd class="col-sm-8">@Model.DateAdded.ToString("d")</dd>
-        </dl>
+                        <dt class="col-sm-4 fw-semibold text-muted">Market Price:</dt>
+                        <dd class="col-sm-8 text-success fw-bold">@Model.MarketPrice.ToString("C")</dd>
+
+                        <dt class="col-sm-4 fw-semibold text-muted">Date Added:</dt>
+                        <dd class="col-sm-8">@Model.DateAdded.ToString("d")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animal Image -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 h-100 d-flex align-items-center justify-content-center">
+                @if (Model.Picture != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Picture)"
+                         class="img-fluid rounded"
+                         alt="@Model.AnimalTag"
+                         style="max-height: 400px; object-fit: cover;">
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-image fa-5x text-secondary"></i>
+                        <p class="mt-3 text-muted">No Image Available</p>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        @if (Model.Picture != null)
+
+    <!-- Action Buttons -->
+    <div class="mt-4 text-center text-md-start">
+        <a href="@Url.Action("Index", "Purchase")" class="btn btn-outline-secondary rounded-pill me-2 mb-2">
+            <i class="fas fa-arrow-left"></i> Back to Animals For Sale
+        </a>
+
+        @if (Model.CurrentStatus == StatusAnimal.ForSale)
         {
-            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Picture)"
-                 class="img-fluid rounded" alt="@Model.AnimalTag" style="max-height: 400px;">
+            <a href="@Url.Action("AddToCart", "Purchase", new { animalId = Model.AnimalID })"
+               class="btn btn-success rounded-pill me-2 mb-2">
+                <i class="fas fa-shopping-cart"></i> Reserve for Purchase
+            </a>
         }
         else
         {
-            <div class="text-center py-5 border rounded bg-light">
-                <i class="fas fa-image fa-5x text-muted"></i>
-                <p class="mt-3">No Image Available</p>
+            <div class="alert alert-warning d-inline-block me-2 mb-2">
+                <i class="fas fa-exclamation-triangle"></i> This animal is not available for purchase
             </div>
+
+            <!-- Schedule Vet Appointment -->
+            <form asp-action="SelectHealthDate" asp-controller="Vet" method="post" class="d-inline-block mb-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="animalId" value="@Model.AnimalID" />
+                <button type="submit" class="btn btn-warning rounded-pill">
+                    <i class="fas fa-stethoscope"></i> Schedule Vet Appointment
+                </button>
+            </form>
         }
     </div>
 </div>
-
-<div class="mt-4">
-    <a href="@Url.Action("Index", "Purchase")" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back to Animals For Sale
-    </a>
-
-    @if (Model.CurrentStatus == StatusAnimal.ForSale)
-    {
-        <a href="@Url.Action("AddToCart", "Purchase", new { animalId = Model.AnimalID })"
-           class="btn btn-success ml-2">
-            <i class="fas fa-shopping-cart"></i> Reserve for Purchase
-        </a>
-    }
-    else
-    {
-        <div class="alert alert-warning mt-3 d-inline-block ml-2">
-            This animal is not available for purchase
-        </div>
-
-        <!-- Schedule Vet Appointment button (UC 15) -->
-        <form asp-action="SelectHealthDate" asp-controller="Vet" method="post" class="d-inline-block ml-2">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="animalId" value="@Model.AnimalID" />
-            <button type="submit" class="btn btn-warning">
-                <i class="fas fa-stethoscope"></i> Schedule Vet Appointment
-            </button>
-        </form>
-    }
-</div>
-
 
 @section Scripts {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 }
+
+<style>
+    body {
+        background-color: #fff;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+    dt {
+        font-size: 0.9rem;
+    }
+
+    dd {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+</style>

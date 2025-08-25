@@ -1,12 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Health Check Confirmed";
+    var scheduledDate = ViewBag.ScheduledDate as DateTime?;
+    var vetName = ViewBag.VetName as string;
+    var animalTag = ViewBag.AnimalTag as string;
 }
 
-<div class="alert alert-success mt-4">
-    <h4 class="alert-heading">Success!</h4>
-    <p>The health check has been scheduled successfully.</p>
-</div>
+<div class="container mt-4">
+    <div class="alert alert-success">
+        <h4 class="alert-heading">Success!</h4>
+        <p>The health check for <strong>@animalTag</strong> has been scheduled successfully.</p>
 
-<a asp-controller="Purchase" asp-action="" class="btn btn-primary">
-    <i class="fas fa-arrow-left"></i> Back to Animal Index
-</a>
+        @if (scheduledDate.HasValue && !string.IsNullOrEmpty(vetName))
+        {
+            <hr />
+            <p><strong>Scheduled Date:</strong> @scheduledDate.Value.ToString("f")</p>
+            <p><strong>Assigned Vet:</strong> @vetName</p>
+        }
+    </div>
+
+    <a asp-controller="Purchase" asp-action="Index" class="btn btn-primary">
+        <i class="fas fa-arrow-left me-1"></i> Back to Animal Index
+    </a>
+</div>

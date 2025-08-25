@@ -1,60 +1,113 @@
 ﻿@model List<Animal>
 
-<h2>Your Cart</h2>
+<div class="container py-4">
+    <h2 class="fw-bold text-center mb-4 text-dark">Your Cart</h2>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        <i class="fas fa-shopping-cart"></i> Your cart is empty
-    </div>
-    <a href="@Url.Action("ForSale", "Animal")" class="btn btn-primary">
-        Browse Available Animals
-    </a>
-}
-else
-{
-    <div class="row">
-        @foreach (var animal in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    @if (animal.Picture != null)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(animal.Picture)"
-                             class="card-img-top" alt="@animal.AnimalTag" style="height: 200px; object-fit: cover;">
-                    }
-                    else
-                    {
-                        <div class="text-center py-5 bg-light">
-                            <i class="fas fa-image fa-3x text-muted"></i>
-                        </div>
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title">@animal.AnimalTag</h5>
-                        <p class="card-text">
-                            <strong>Type:</strong> @animal.AnimalTypeID.GetEnumDisplayName()<br>
-                            <strong>Price:</strong> @animal.MarketPrice.ToString("C")
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        <form asp-action="RemoveFromCart" method="post">
-                            <input type="hidden" name="animalId" value="@animal.AnimalID" />
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i> Remove
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-
-    <div class="mt-4 border-top pt-3">
-        <div class="d-flex justify-content-between">
-            <h4>Total: @Model.Sum(a => a.MarketPrice).ToString("C")</h4>
-            <a href="@Url.Action("ConfirmAddress", "Checkout")" class="btn btn-success btn-lg">
-                <i class="fas fa-check-circle mr-2"></i> Proceed to Checkout
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-4 rounded-3 shadow-sm">
+            <i class="fas fa-shopping-cart fa-lg me-2"></i>
+            Your cart is empty
+        </div>
+        <div class="text-center mt-3">
+            <a href="@Url.Action("", "Purchase")" class="btn btn-outline-primary rounded-pill px-4">
+                Browse Available Animals
             </a>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var animal in Model)
+            {
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="card shadow-sm border-0 rounded-3 h-100">
+                        @if (animal.Picture != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(animal.Picture)"
+                                 class="card-img-top rounded-top"
+                                 alt="@animal.AnimalTag"
+                                 style="height: 220px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="d-flex flex-column align-items-center justify-content-center bg-light"
+                                 style="height: 220px; border-top-left-radius: .5rem; border-top-right-radius: .5rem;">
+                                <i class="fas fa-image fa-3x text-secondary"></i>
+                                <p class="mt-2 text-muted">No Image</p>
+                            </div>
+                        }
+
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold">@animal.AnimalTag</h5>
+                            <p class="card-text text-muted">
+                                <strong>Type:</strong> @animal.AnimalTypeID.GetEnumDisplayName()<br>
+                                <strong>Price:</strong> <span class="text-success fw-bold">@animal.MarketPrice.ToString("C")</span>
+                            </p>
+                        </div>
+
+                        <div class="card-footer bg-white border-0 text-end">
+                            <form asp-action="RemoveFromCart" method="post" class="d-inline">
+                                <input type="hidden" name="animalId" value="@animal.AnimalID" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="mt-5 p-4 border-top">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <h4 class="mb-3 mb-md-0">
+                    Total: <span class="text-success fw-bold">@Model.Sum(a => a.MarketPrice).ToString("C")</span>
+                </h4>
+                <a href="@Url.Action("ConfirmAddress", "Checkout")"
+                   class="btn btn-success btn-lg rounded-pill px-4">
+                    <i class="fas fa-check-circle me-2"></i> Proceed to Checkout
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 }
+
+<style>
+    body {
+        background-color: #fff;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+    .btn {
+        font-weight: 500;
+    }
+
+    @@media (max-width: 576px) {
+        h2
+
+    {
+        font-size: 1.4rem;
+    }
+
+    }
+</style>

@@ -1,62 +1,105 @@
 ﻿@using EvergreenRanch.Models.ViewModels
 @model ShippingViewModel
 
-<div class="container mt-4">
-    <h2>Shipping Information</h2>
+<div class="container py-4">
+    <h2 class="fw-bold text-center mb-4 text-dark">Shipping Information</h2>
 
-    <form asp-action="ConfirmAddress" method="post" class="mt-3">
-        <div class="row">
-            <div class="col-md-6">
-                <!-- Full Name -->
-                <div class="mb-3">
-                    <label asp-for="FullName" class="form-label"></label>
-                    <input asp-for="FullName" class="form-control" required>
-                    <span asp-validation-for="FullName" class="text-danger"></span>
-                </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4">
+                    <form asp-action="ConfirmAddress" method="post" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <!-- Full Name -->
+                                <div class="mb-3">
+                                    <label asp-for="FullName" class="form-label fw-semibold"></label>
+                                    <input asp-for="FullName" class="form-control rounded-pill" required />
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
 
-                <!-- Address -->
-                <div class="mb-3">
-                    <label asp-for="Address" class="form-label"></label>
-                    <input asp-for="Address" class="form-control" required>
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
+                                <!-- Address -->
+                                <div class="mb-3">
+                                    <label asp-for="Address" class="form-label fw-semibold"></label>
+                                    <input asp-for="Address" class="form-control rounded-pill" required />
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
 
-                <!-- City -->
-                <div class="mb-3">
-                    <label asp-for="City" class="form-label"></label>
-                    <input asp-for="City" class="form-control" required>
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
-            </div>
+                                <!-- City -->
+                                <div class="mb-3">
+                                    <label asp-for="City" class="form-label fw-semibold"></label>
+                                    <input asp-for="City" class="form-control rounded-pill" required />
+                                    <span asp-validation-for="City" class="text-danger small"></span>
+                                </div>
+                            </div>
 
-            <div class="col-md-6">
-                <!-- Province -->
-                <div class="mb-3">
-                    <label asp-for="Province" class="form-label"></label>
-                    <input asp-for="Province" class="form-control" required>
-                    <span asp-validation-for="Province" class="text-danger"></span>
-                </div>
+                            <div class="col-md-6">
+                                <!-- Province -->
+                                <div class="mb-3">
+                                    <label asp-for="Province" class="form-label fw-semibold"></label>
+                                    <input asp-for="Province" class="form-control rounded-pill" required />
+                                    <span asp-validation-for="Province" class="text-danger small"></span>
+                                </div>
 
-                <!-- Postal Code -->
-                <div class="mb-3">
-                    <label asp-for="PostalCode" class="form-label"></label>
-                    <input asp-for="PostalCode" class="form-control" required>
-                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                                <!-- Postal Code -->
+                                <div class="mb-3">
+                                    <label asp-for="PostalCode" class="form-label fw-semibold"></label>
+                                    <input asp-for="PostalCode" class="form-control rounded-pill" required />
+                                    <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="mt-4 d-flex flex-column flex-sm-row justify-content-between">
+                            <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 mb-2 mb-sm-0">
+                                ← Back to Cart
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                Continue to Payment →
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <div class="mt-4">
-            <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">
-                ← Back to Cart
-            </a>
-            <button type="submit" class="btn btn-primary">
-                Continue to Payment →
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    body {
+        background-color: #fff;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+    .form-label {
+        font-size: 0.9rem;
+        color: #444;
+    }
+
+    .form-control {
+        padding: 0.65rem 1rem;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+</style>

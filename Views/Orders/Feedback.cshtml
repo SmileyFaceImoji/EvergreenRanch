@@ -4,25 +4,69 @@
     ViewData["Title"] = "Feedback";
 }
 
-<div class="container mt-4">
-    <h2>Leave Feedback</h2>
-    <p>Thank you for confirming your order. Please leave your feedback below:</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-3">Leave Feedback</h2>
+                    <p class="text-muted text-center">Thank you for confirming your order. Please leave your feedback below:</p>
 
-    <form asp-action="Feedback" method="post" class="shadow-sm p-4 bg-light rounded">
-        <input type="hidden" asp-for="OrderId" />
+                    <!-- Success message (if TempData is set in controller) -->
+                    @if (TempData["FeedbackSuccess"] != null)
+                    {
+                        <div class="alert alert-success text-center">
+                            @TempData["FeedbackSuccess"]
+                        </div>
+                    }
 
-        <div class="mb-3">
-            <label asp-for="Rating" class="form-label">Rating (1-5)</label>
-            <input asp-for="Rating" type="number" min="1" max="5" class="form-control" required />
-            <span asp-validation-for="Rating" class="text-danger"></span>
+                    <form asp-action="Feedback" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="OrderId" />
+
+                        <div class="mb-3">
+                            <label asp-for="Rating" class="form-label fw-semibold">Rating (1-5)</label>
+                            <input asp-for="Rating" type="number" min="1" max="5" class="form-control" required />
+                            <div class="invalid-feedback">Please provide a rating between 1 and 5.</div>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Comments" class="form-label fw-semibold">Comments</label>
+                            <textarea asp-for="Comments" class="form-control" rows="4" placeholder="Write your comments here..."></textarea>
+                            <span asp-validation-for="Comments" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                Submit Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="Comments" class="form-label">Comments</label>
-            <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
-            <span asp-validation-for="Comments" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit Feedback</button>
-    </form>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Bootstrap validation styling
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

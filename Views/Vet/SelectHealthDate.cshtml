@@ -2,12 +2,28 @@
     ViewData["Title"] = "Select Health Check Date";
 }
 
-<h2>Select Health Check Date</h2>
+<div class="container py-4">
+    <h2 class="mb-4">Select Health Check Date</h2>
 
-@using (Html.BeginForm("SelectHealthDate", "Vet", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="animalId" value="@ViewBag.AnimalId" />
-    <input type="date" name="selectedDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
-    <input type="submit" value="Select Date" class="btn btn-outline-success" />
-}
+    @using (Html.BeginForm("SelectHealthDate", "Vet", FormMethod.Post, new { @class = "row g-3 align-items-center" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="animalId" value="@ViewBag.AnimalId" />
+
+        <div class="col-auto">
+            <label for="selectedDate" class="form-label">Choose a date:</label>
+            <input type="date"
+                   id="selectedDate"
+                   name="selectedDate"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   class="form-control"
+                   required />
+        </div>
+
+        <div class="col-auto mt-3">
+            <button type="submit" class="btn btn-outline-success">
+                <i class="fas fa-calendar-check me-1"></i> Select Date
+            </button>
+        </div>
+    }
+</div>
