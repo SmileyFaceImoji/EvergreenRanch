@@ -1,91 +1,90 @@
-﻿@model EvergreenRanch.Models.Order
+﻿@model EvergreenRanch.Models.ViewModels.OrderDetailsViewModel
 
 @{
     ViewData["Title"] = "Order Details";
 }
-<div class="container py-4">
-    <h2 class="fw-bold mb-4">Order #@Model.OrderId</h2>
 
-    <div class="row">
-        <div class="col-lg-6 mb-4">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-body">
-                    <p><strong>Status:</strong> <span class="badge bg-info text-dark">@Model.OrderStatus</span></p>
-                    <p><strong>Total:</strong> <span class="fw-bold text-success">$@Model.TotalAmount.ToString("0.00")</span></p>
-                    <p><strong>Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd")</p>
-                </div>
-            </div>
+<div class="container mt-4">
+    <h2>Order #@Model.Order.OrderId</h2>
+    <p><strong>Status:</strong> @Model.Order.OrderStatus</p>
+    <p><strong>Total:</strong> $@Model.Order.TotalAmount.ToString("0.00")</p>
+    <p><strong>Date:</strong> @Model.Order.OrderDate.ToString("yyyy-MM-dd")</p>
 
-            <div class="card border-0 shadow-sm rounded-3 mt-3">
-                <div class="card-body">
-                    <h5 class="fw-semibold mb-3">Shipping Information</h5>
-                    <ul class="list-group list-group-flush small">
-                        <li class="list-group-item"><strong>Name:</strong> @Model.FullName</li>
-                        <li class="list-group-item"><strong>Address:</strong> @Model.Address, @Model.City, @Model.Province</li>
-                        <li class="list-group-item"><strong>Postal Code:</strong> @Model.PostalCode</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <h4 class="mt-3">Shipping Information</h4>
+    <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Name:</strong> @Model.Order.FullName</li>
+        <li class="list-group-item"><strong>Address:</strong> @Model.Order.Address, @Model.Order.City, @Model.Order.Province</li>
+        <li class="list-group-item"><strong>Postal Code:</strong> @Model.Order.PostalCode</li>
+    </ul>
 
-        <!-- Order items -->
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-body">
-                    <h5 class="fw-semibold mb-3">Order Items</h5>
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Animal ID</th>
-                                <th>Unit Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OrderItems)
-                            {
-                                <tr>
-                                    <td>@item.AnimalID</td>
-                                    <td>$@item.UnitPrice.ToString("0.00")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h4 class="mt-3">Order Items</h4>
+    <table class="table table-hover shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Animal ID</th>
+                <th>Unit Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Order.OrderItems)
+            {
+                <tr>
+                    <td>@item.AnimalID</td>
+                    <td>$@item.UnitPrice.ToString("0.00")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-    <!-- Delivery confirmation -->
-    <div class="mt-4">
-        @if (!Model.RecievedByCustomer)
+    @if (User.IsInRole("Admin"))
+    {
+        if (!string.IsNullOrEmpty(Model.AssignedDriver))
         {
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-body">
-                    <h5 class="fw-semibold mb-3">Confirm Delivery</h5>
-                    <form asp-action="DidYouGetIt" method="post" class="row g-2">
-                        <input type="hidden" name="OrderId" value="@Model.OrderId" />
-                        <div class="col-md-6">
-                            <input type="text" name="SecretKey" class="form-control rounded-pill" placeholder="Enter Secret Key" required />
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-success rounded-pill px-4">
-                                Confirm
-                            </button>
-                        </div>
-                    </form>
-
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>
-                    }
-                </div>
+            <div class="alert alert-info">
+                Driver <strong>@Model.AssignedDriver</strong> has been assigned to this order.
             </div>
         }
         else
         {
-            <div class="alert alert-success shadow-sm rounded-pill px-4 py-2">
-                ✅ Order confirmed on @Model.RecievedAt?.ToString("g")
-            </div>
+            <form asp-action="AssignDriver" method="post" class="mt-3">
+                <input type="hidden" name="orderId" value="@Model.Order.OrderId" />
+                <div class="input-group">
+                    <select name="driverUserId" class="form-select" asp-items="Model.DriverList"></select>
+                    <button type="submit" class="btn btn-primary">Assign Driver</button>
+                </div>
+            </form>
+        }
+    }
+
+
+
+    <div class="mt-4">
+        @if (!User.IsInRole("Admin") && !User.IsInRole("Driver"))
+        {
+            @if (!Model.Order.RecievedByCustomer)
+            {
+                <h5>Confirm Delivery</h5>
+                <form asp-action="DidYouGetIt" method="post" class="row g-2">
+                    <input type="hidden" name="OrderId" value="@Model.Order.OrderId" />
+                    <div class="col-auto">
+                        <input type="text" name="SecretKey" class="form-control" placeholder="Enter Secret Key" required />
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-success">Confirm</button>
+                    </div>
+                </form>
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger mt-2">@TempData["ErrorMessage"]</div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-success">
+                    Order confirmed on @Model.Order.RecievedAt?.ToString("g")
+                </div>
+            }
         }
     </div>
 </div>

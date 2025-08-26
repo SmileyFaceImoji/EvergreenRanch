@@ -78,6 +78,7 @@ public class Program
                 await EnsureRolesAsync(roleManager, logger);
                 await EnsureAdminUserAsync(userManager, logger);
                 await EnsureWorkerUsersAsync(userManager, logger);
+                await EnsureDriverUsersAsync(userManager, logger);
             }
             catch (Exception ex)
             {
@@ -90,7 +91,7 @@ public class Program
 
     private static async Task EnsureRolesAsync(RoleManager<IdentityRole> roleManager, ILogger logger)
     {
-        var roles = new[] { "Admin", "User", "Worker" };
+        var roles = new[] { "Admin", "User", "Worker", "Driver" }; // Added Driver
 
         foreach (var role in roles)
         {
@@ -108,6 +109,56 @@ public class Program
             }
         }
     }
+
+    private static async Task EnsureDriverUsersAsync(UserManager<IdentityUser> userManager, ILogger logger)
+    {
+        var drivers = new List<(string Email, string Password)>
+        {
+        ("driver1@green.com", "Password@123"),
+        ("driver2@green.com", "Password@123"),
+        ("driver3@green.com", "Password@123"),
+        ("driver4@green.com", "Password@123"),
+        ("driver5@green.com", "Password@123")
+       };
+
+        foreach (var (email, password) in drivers)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                user = new IdentityUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    logger.LogInformation($"Driver user '{email}' created.");
+                    var roleResult = await userManager.AddToRoleAsync(user, "Driver");
+                    if (roleResult.Succeeded)
+                    {
+                        logger.LogInformation($"Driver user '{email}' assigned to 'Driver' role.");
+                    }
+                    else
+                    {
+                        logger.LogError($"Failed assigning 'Driver' role to '{email}': {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+                    }
+                }
+                else
+                {
+                    logger.LogError($"Failed to create driver '{email}': {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                }
+            }
+            else
+            {
+                logger.LogInformation($"Driver user '{email}' already exists.");
+            }
+        }
+    }
+
 
     private static async Task EnsureAdminUserAsync(UserManager<IdentityUser> userManager, ILogger logger)
     {

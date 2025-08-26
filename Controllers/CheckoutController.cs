@@ -171,6 +171,7 @@ namespace EvergreenRanch.Controllers
                 City = shippingInfo.City,
                 Province = shippingInfo.Province,
                 PostalCode = shippingInfo.PostalCode,
+                OrderStatus = Order.StatusOrder.Recieved,
                 OrderItems = animals.Select(a => new OrderItem
                 {
                     AnimalID = a.AnimalID,
@@ -187,7 +188,7 @@ namespace EvergreenRanch.Controllers
             HttpContext.Session.Remove("ShippingInfo");
             HttpContext.Session.Remove("StripeSessionId");
 
-            return RedirectToAction("","Home");
+            return RedirectToAction("","");
         }
 
         public IActionResult Cancel() => View();
