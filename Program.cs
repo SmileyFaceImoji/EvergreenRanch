@@ -8,6 +8,8 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Logging.ClearProviders();
