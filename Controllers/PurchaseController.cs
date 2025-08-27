@@ -1,10 +1,12 @@
 ﻿using EvergreenRanch.Data;
 using EvergreenRanch.Models.Common;
 using EvergreenRanch.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvergreenRanch.Controllers
 {
+    [Authorize]
     public class PurchaseController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -71,7 +73,7 @@ namespace EvergreenRanch.Controllers
             TempData["SuccessMessage"] = "Animal added to your cart!";
 
             // Redirect back to the details page
-            return RedirectToAction("Details", new { id = animalId });
+            return RedirectToAction(nameof(MyCart));
         }
 
         [HttpPost]

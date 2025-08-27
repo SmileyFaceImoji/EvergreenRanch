@@ -82,9 +82,41 @@
             else
             {
                 <div class="alert alert-success">
-                    Order confirmed on @Model.Order.RecievedAt?.ToString("g")
+                    Order confirmed on @Model.Order.RecievedAt?.ToString("dddd dd-MMM-yyyy")
                 </div>
             }
         }
+        <h4 class="mt-3">Order Items</h4>
+<table class="table table-hover shadow-sm">
+    <thead class="table-light">
+        <tr>
+            <th>Animal ID</th>
+            <th>Unit Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Order.OrderItems)
+        {
+            <tr>
+                <td>@item.AnimalID</td>
+                <td>$@item.UnitPrice.ToString("0.00")</td>
+                <td>
+                    @if (Model.Order.RecievedByCustomer)  
+                    {
+                        <a asp-controller="Returns" 
+                           asp-action="Create" 
+                           asp-route-orderId="@Model.Order.OrderId" 
+                           asp-route-animalId="@item.AnimalID" 
+                           class="btn btn-sm btn-danger">
+                            Request Return
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
     </div>
 </div>

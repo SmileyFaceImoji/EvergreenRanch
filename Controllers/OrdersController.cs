@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Frameworks;
 using System.Security.Claims;
 
 namespace EvergreenRanch.Controllers
@@ -134,17 +135,30 @@ namespace EvergreenRanch.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Feedback(OrderFeedback feedback)
         {
+            // Remove validation for Order nav property
+            ModelState.Remove(nameof(feedback.Order));
+
             if (!ModelState.IsValid)
                 return View(feedback);
 
-            _context.Add(feedback);
+            var newFeedback = new OrderFeedback
+            {
+                OrderId = feedback.OrderId,
+                Rating = feedback.Rating,
+                Comments = feedback.Comments,
+                SubmittedAt = DateTime.UtcNow
+            };
+
+            _context.OrderFeedbacks.Add(newFeedback);
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Thank you for your feedback!";
             return RedirectToAction("Index");
         }
+
 
 
     }

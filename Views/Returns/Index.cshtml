@@ -4,12 +4,7 @@
 }
 
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="fw-bold">@ViewData["Title"]</h2>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> New Request
-        </a>
-    </div>
+    
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -58,15 +53,19 @@
                                                     @(request.Status == ReturnRequests.ReturnStatus.Refunded ? "bg-success" :
                                                                                             request.Status == ReturnRequests.ReturnStatus.Rejected ? "bg-danger" :
                                                                                             request.Status == ReturnRequests.ReturnStatus.Approved ? "bg-primary" : "bg-warning text-dark")">
-                                    @request.Status
-                                </span>
-                            </td>
-                            <td class="text-end">
-                                <a href="@Url.Action("Details", "Returns", new { id = request.ReturnId })"
-                                   class="btn btn-sm btn-outline-info">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                            </td>
+                                            @request.Status
+                                        </span>
+                                    </td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td class="text-end">
+                                            <a href="@Url.Action("Details", "Returns", new { id = request.ReturnId })"
+                                               class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    }
+                                    
                         </tr>
                                                 }
                         </tbody>

@@ -25,8 +25,8 @@
                         <tr>
                             <td>@order.OrderId</td>
                             <td><span class="badge bg-info text-dark">@order.OrderStatus</span></td>
-                            <td class="fw-semibold text-success">$@order.TotalAmount.ToString("0.00")</td>
-                            <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                            <td class="fw-semibold text-success">R @order.TotalAmount.ToString("0.00")</td>
+                            <td>@order.OrderDate.ToString("dd-MMM-yyyy")</td>
                             <td>
                                 @if (order.RecievedByCustomer)
                                 {

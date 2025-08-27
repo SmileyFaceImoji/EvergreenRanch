@@ -188,7 +188,7 @@ namespace EvergreenRanch.Controllers
             HttpContext.Session.Remove("ShippingInfo");
             HttpContext.Session.Remove("StripeSessionId");
 
-            return RedirectToAction("","");
+            return RedirectToAction("","Orders");
         }
 
         public IActionResult Cancel() => View();

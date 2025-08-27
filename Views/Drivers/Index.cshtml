@@ -22,6 +22,7 @@
             <th>Customer</th>
             <th>Status</th>
             <th>Order Date</th>
+            <th>Client Secrkey</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -41,6 +42,7 @@
                     </span>
                 </td>
                 <td>@order.OrderDate.ToString("d")</td>
+                <td>@order.SecretKey</td>
                 <td>
                     <form method="post" asp-controller="Drivers" asp-action="UpdateStatus" class="d-flex gap-2">
                         <input type="hidden" name="orderId" value="@order.OrderId" />
