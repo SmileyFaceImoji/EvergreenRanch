@@ -69,7 +69,7 @@ namespace EvergreenRanch.Controllers
             var total = subtotal + tax;
 
             // Create Stripe session
-            var domain = "https://localhost:7009";
+            var domain = "https://evergreenranch2025-eea4ceakczezepgb.canadacentral-01.azurewebsites.net";
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string> { "card" },
