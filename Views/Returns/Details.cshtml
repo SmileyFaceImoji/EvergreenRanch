@@ -5,19 +5,20 @@
     ViewData["Title"] = "Review Return Request";
 }
 
-<div class="container py-4">
-    <h2 class="mb-4">Return Request #@Model.ReturnId</h2>
+<div class="container py-5">
+    <h2 class="mb-4 text-center fw-bold">Return Request <span class="text-primary">#@Model.ReturnId</span></h2>
 
-    <div class="row">
-        <!-- Left Column: Return Details -->
+    <div class="row g-4">
+        <!-- Left Column: Return Details & Evidence -->
         <div class="col-md-6">
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-light fw-semibold">Return Details</div>
+            <!-- Return Details Card -->
+            <div class="card shadow-sm border-0 rounded-3 mb-4">
+                <div class="card-header bg-white fw-semibold">Return Details</div>
                 <div class="card-body">
-                    <dl class="row">
+                    <dl class="row mb-0">
                         <dt class="col-sm-4">Status:</dt>
                         <dd class="col-sm-8">
-                            <span class="badge
+                            <span class="badge rounded-pill
                                 @(Model.Status == ReturnRequests.ReturnStatus.Refunded ? "bg-success" :
                                                                     Model.Status == ReturnRequests.ReturnStatus.Rejected ? "bg-danger" :
                                                                     Model.Status == ReturnRequests.ReturnStatus.Approved ? "bg-primary" : "bg-warning text-dark")">
@@ -52,9 +53,9 @@
                 </div>
             </div>
 
-            <!-- Evidence Images -->
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-light fw-semibold">Evidence Images</div>
+            <!-- Evidence Images Card -->
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-white fw-semibold">Evidence Images</div>
                 <div class="card-body">
                     @if (Model.Images != null && Model.Images.Any())
                     {
@@ -76,7 +77,7 @@
                     }
                     else
                     {
-                        <p class="text-muted">No images provided.</p>
+                        <p class="text-muted mb-0">No images provided.</p>
                     }
                 </div>
             </div>
@@ -84,10 +85,11 @@
 
         <!-- Right Column: Order & Animal Info -->
         <div class="col-md-6">
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-light fw-semibold">Order Details</div>
+            <!-- Order Details Card -->
+            <div class="card shadow-sm border-0 rounded-3 mb-4">
+                <div class="card-header bg-white fw-semibold">Order Details</div>
                 <div class="card-body">
-                    <dl class="row">
+                    <dl class="row mb-0">
                         <dt class="col-sm-4">Order ID:</dt>
                         <dd class="col-sm-8">@Model.Order?.OrderId.ToString() ?? "<span class='text-muted'>N/A</span>"</dd>
 
@@ -100,26 +102,19 @@
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-light fw-semibold">Animal Details</div>
+            <!-- Animal Details Card -->
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-white fw-semibold">Animal Details</div>
                 <div class="card-body">
-                    <dl class="row">
+                    <dl class="row mb-0">
                         <dt class="col-sm-4">Tag:</dt>
                         <dd class="col-sm-8">@Model.Animal?.AnimalTag ?? "<span class='text-muted'>N/A</span>"</dd>
 
                         <dt class="col-sm-4">Type:</dt>
-                        <dd class="col-sm-8">
-                            @(Model.Animal != null
-                                                        ? Model.Animal.AnimalTypeID.GetEnumDisplayName()
-                                                        : "<span class='text-muted'>N/A</span>")
-                        </dd>
+                        <dd class="col-sm-8">@Model.Animal?.AnimalTypeID.GetEnumDisplayName() ?? "<span class='text-muted'>N/A</span>"</dd>
 
                         <dt class="col-sm-4">Price:</dt>
-                        <dd class="col-sm-8">
-                            @(Model.Animal != null
-                                                        ? Model.Animal.MarketPrice.ToString("C")
-                                                        : "<span class='text-muted'>N/A</span>")
-                        </dd>
+                        <dd class="col-sm-8">@Model.Animal?.MarketPrice.ToString("C") ?? "<span class='text-muted'>N/A</span>"</dd>
                     </dl>
 
                     @if (Model.Animal?.Picture != null)
@@ -138,20 +133,44 @@
     <div class="mt-4 d-flex flex-wrap gap-2">
         <form asp-action="Approve" asp-route-id="@Model.ReturnId" method="post">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success rounded-pill">
                 <i class="fas fa-check me-2"></i> Approve & Refund
             </button>
         </form>
 
         <form asp-action="Deny" asp-route-id="@Model.ReturnId" method="post">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-danger">
+            <button type="submit" class="btn btn-danger rounded-pill">
                 <i class="fas fa-times me-2"></i> Reject
             </button>
         </form>
 
-        <a asp-action="Index" class="btn btn-outline-secondary">
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
             <i class="fas fa-arrow-left me-1"></i> Back
         </a>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #fff;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    .hover-zoom {
+        transition: transform 0.2s ease;
+    }
+
+        .hover-zoom:hover {
+            transform: scale(1.05);
+        }
+
+    .badge {
+        font-size: 0.85rem;
+    }
+</style>

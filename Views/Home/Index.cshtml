@@ -2,12 +2,60 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid bg-white py-5">
+    <div class="row align-items-center justify-content-center">
+        <!-- Hero Text -->
+        <div class="col-lg-6 text-center text-lg-start px-4">
+            <h1 class="display-2 fw-bold text-dark mb-4">
+                Welcome to Evergreen
+            </h1>
+            <p class="lead text-muted mb-4">
+                Discover healthy, high-quality farm animals ready for your farm. Browse our curated selection of livestock, get detailed information about each animal, and make your purchases with confidence.
+            </p>
+            <p class="text-muted mb-4">
+                From cattle and goats to poultry and specialty breeds, Evergreen makes it easy to find the right animals for your farm. Enjoy a seamless experience from browsing to delivery.
+            </p>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="btn btn-dark btn-lg rounded-3 px-4 py-2 shadow-sm"
+                   asp-area="" asp-controller="Admin" asp-action="AddAnimal">
+                    Add New Animals
+                </a>
+            }
+        </div>
+
+        <!-- Hero Image -->
+        <div class="col-lg-6 mt-5 mt-lg-0 text-center">
+            <div class="bg-light border rounded-3 shadow-sm overflow-hidden"
+                 style="height: 500px; max-width: 100%;">
+                <img src="https://images.unsplash.com/photo-1454179083322-198bb4daae41?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                     alt="Farm Animals"
+                     class="img-fluid h-100 w-100 object-fit-cover">
+            </div>
+        </div>
+    </div>
 </div>
 
-@if (User.IsInRole("Admin"))
-{
-    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="AddAnimal">Available Animals</a>
-}
+<style>
+    h1.display-2 {
+        line-height: 1.1;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    @@media (max-width: 992px) {
+        .display-2
+
+    {
+        font-size: 2.5rem;
+    }
+
+    }
+</style>

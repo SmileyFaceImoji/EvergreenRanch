@@ -4,46 +4,81 @@
     ViewData["Title"] = "Perform Health Check";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-3">Health Check for Animal #@Model.AnimalId</h2>
+<div class="container py-5">
+    <h1 class="display-5 fw-bold mb-4 text-center">Perform Health Check</h1>
+    <h5 class="text-center text-muted mb-5">Animal #@Model.AnimalId</h5>
 
-    <!-- Animal Info Partial -->
-    <div class="card shadow-sm mb-4">
+    <!-- Animal Info Card -->
+    <div class="card shadow-sm mb-4 border-0 rounded-3">
+        <div class="card-header bg-light fw-semibold">Animal Details</div>
         <div class="card-body">
-            <h5 class="card-title">Animal Details</h5>
             @await Html.PartialAsync("_AnimalInfo", Model.Animal)
         </div>
     </div>
 
-    <!-- Health Check Form -->
-    <form asp-action="Complete" method="post">
-        <input type="hidden" asp-for="AnimalId" />
-        <input type="hidden" asp-for="VetUserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+    <!-- Health Check Form Card -->
+    <div class="card shadow-sm border-0 rounded-3 p-4">
+        <form asp-action="Complete" method="post" class="row g-3">
+            <input type="hidden" asp-for="AnimalId" />
+            <input type="hidden" asp-for="VetUserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
 
-        <div class="mb-3">
-            <label asp-for="ScheduledDate" class="form-label">Scheduled Date</label>
-            <input asp-for="ScheduledDate" class="form-control" type="datetime-local" />
-            <span asp-validation-for="ScheduledDate" class="text-danger"></span>
-        </div>
+            <div class="col-12">
+                <label asp-for="ScheduledDate" class="form-label fw-semibold">Scheduled Date</label>
+                <input asp-for="ScheduledDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="ScheduledDate" class="text-danger small"></span>
+            </div>
 
-        <div class="mb-3">
-            <label asp-for="Notes" class="form-label">Notes</label>
-            <textarea asp-for="Notes" class="form-control" rows="4" maxlength="500" placeholder="Enter any observations..."></textarea>
-            <span asp-validation-for="Notes" class="text-danger"></span>
-        </div>
+            <div class="col-12">
+                <label asp-for="Notes" class="form-label fw-semibold">Notes</label>
+                <textarea asp-for="Notes" class="form-control" rows="4" maxlength="500" placeholder="Enter any observations..."></textarea>
+                <span asp-validation-for="Notes" class="text-danger small"></span>
+            </div>
 
-        <div class="form-check mb-3">
-            <input asp-for="Completed" class="form-check-input" type="checkbox" />
-            <label asp-for="Completed" class="form-check-label">Mark as Completed</label>
-        </div>
+            <div class="col-12 form-check">
+                <input asp-for="Completed" class="form-check-input" type="checkbox" />
+                <label asp-for="Completed" class="form-check-label">Mark as Completed</label>
+            </div>
 
-        <button type="submit" class="btn btn-success">Save Health Check</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+            <div class="col-12 d-flex flex-wrap gap-2 mt-3">
+                <button type="submit" class="btn btn-success btn-lg rounded-pill px-4">
+                    <i class="fas fa-save me-2"></i> Save Health Check
+                </button>
+                <a asp-action="Index" class="btn btn-secondary btn-lg rounded-pill px-4">
+                    <i class="fas fa-times me-2"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+    h1.display-5 {
+        line-height: 1.1;
+    }
+
+    .form-label.fw-semibold {
+        font-weight: 600;
+    }
+
+   @@media (max-width: 768px) {
+        .card
+
+    {
+        padding: 2rem 1rem;
+    }
+
+    }
+</style>

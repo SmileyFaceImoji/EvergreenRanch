@@ -3,9 +3,14 @@
     ViewData["Title"] = "My Return Requests";
 }
 
-<div class="container py-4">
-    
+<div class="container py-5">
+    <!-- Hero Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark display-6">My Return Requests</h2>
+        <p class="text-muted">Track and manage your submitted return requests</p>
+    </div>
 
+    <!-- Success Message -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
@@ -14,17 +19,19 @@
         </div>
     }
 
+    <!-- No Requests -->
     @if (!Model.Any())
     {
-        <div class="alert alert-info shadow-sm text-center py-4">
-            <i class="fas fa-info-circle fa-2x d-block mb-2"></i>
-            <strong>No Return Requests</strong>
-            <p class="mb-0">You haven’t made any return requests yet.</p>
+        <div class="alert alert-info shadow-sm text-center py-5 rounded-3">
+            <i class="fas fa-info-circle fa-2x mb-3 text-primary"></i>
+            <h5 class="fw-semibold mb-2">No Return Requests</h5>
+            <p class="text-muted mb-0">You haven’t made any return requests yet.</p>
         </div>
     }
     else
     {
-        <div class="card shadow-sm border-0">
+        <!-- Requests Table -->
+        <div class="card shadow-sm border-0 rounded-3">
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -36,38 +43,40 @@
                                 <th>Reason</th>
                                 <th>Request Date</th>
                                 <th>Status</th>
-                                <th></th>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <th></th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var request in Model)
                             {
                                 <tr>
-                                    <td class="fw-semibold">#@request.ReturnId</td>
+                                    <td class="fw-semibold text-dark">#@request.ReturnId</td>
                                     <td>@request.Animal.AnimalTag</td>
                                     <td>@request.OrderId</td>
-                                    <td>@request.Reason</td>
+                                    <td class="text-muted">@request.Reason</td>
                                     <td>@request.RequestDate.ToString("MMM dd, yyyy")</td>
                                     <td>
                                         <span class="badge rounded-pill
                                                     @(request.Status == ReturnRequests.ReturnStatus.Refunded ? "bg-success" :
                                                                                             request.Status == ReturnRequests.ReturnStatus.Rejected ? "bg-danger" :
                                                                                             request.Status == ReturnRequests.ReturnStatus.Approved ? "bg-primary" : "bg-warning text-dark")">
-                                            @request.Status
-                                        </span>
-                                    </td>
-                                    @if (User.IsInRole("Admin"))
+                                    @request.Status
+                                </span>
+                            </td>
+                            @if (User.IsInRole("Admin"))
                                     {
                                         <td class="text-end">
                                             <a href="@Url.Action("Details", "Returns", new { id = request.ReturnId })"
-                                               class="btn btn-sm btn-outline-info">
-                                                <i class="fas fa-eye"></i> View
+                                               class="btn btn-sm btn-outline-info rounded-pill px-3">
+                                                <i class="fas fa-eye me-1"></i> View
                                             </a>
                                         </td>
                                     }
-                                    
-                        </tr>
-                                                }
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -75,3 +84,44 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+}
+
+<style>
+    body {
+        background-color: #fff;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    h2 {
+        font-size: 2rem;
+        letter-spacing: 0.5px;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        border-radius: 0.75rem;
+    }
+
+    .btn {
+        font-weight: 500;
+    }
+
+    .alert {
+        border-radius: 0.75rem;
+    }
+
+    @@media (max-width: 576px) {
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>

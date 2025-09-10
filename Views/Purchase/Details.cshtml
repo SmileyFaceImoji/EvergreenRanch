@@ -4,65 +4,101 @@
     ViewData["Title"] = "Animal Details";
 }
 
-<div class="container mt-5">
-    <div class="card shadow-lg border-0 rounded-3">
-        <div class="card-header bg-success text-white text-center">
-            <h3><i class="fas fa-paw"></i> Animal Tag: @Model.AnimalTag</h3>
-        </div>
-        <div class="card-body">
-            <h5 class="mb-3"><i class="fas fa-info-circle"></i> Animal Information</h5>
-            <ul class="list-group mb-4">
-                <li class="list-group-item"><strong>Animal Type:</strong> @Model.AnimalTypeID</li>
-                <li class="list-group-item"><strong>Gender:</strong> @Model.Gender</li>
-                <li class="list-group-item"><strong>Weight:</strong> @Model.WeightKg kg</li>
-                <li class="list-group-item"><strong>Age:</strong> @Model.AgeInMonths months</li>
-                <li class="list-group-item"><strong>Health Status:</strong> @Model.HealthStatus</li>
-                <li class="list-group-item"><strong>Current Status:</strong> <span class="badge bg-primary">@Model.CurrentStatus</span></li>
-                <li class="list-group-item"><strong>Market Price:</strong> R @Model.MarketPrice.ToString("N2")</li>
-                <li class="list-group-item"><strong>Date Added:</strong> @Model.DateAdded.ToString("dd MMM yyyy")</li>
-            </ul>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
 
-            @if (Model.Picture != null && Model.Picture.Length > 0)
-            {
-                <div class="text-center mb-4">
-                    <img src="data:image/png;base64,@Convert.ToBase64String(Model.Picture)"
-                         alt="Animal Picture" class="img-fluid rounded shadow-sm" style="max-height:300px;" />
+                    <!-- Header -->
+                    <h2 class="fw-bold text-dark mb-4 text-center">
+                        Animal Tag: <span class="text-muted">@Model.AnimalTag</span>
+                    </h2>
+
+                    <!-- Animal Picture -->
+                    @if (Model.Picture != null && Model.Picture.Length > 0)
+                    {
+                        <div class="text-center mb-4">
+                            <img src="data:image/png;base64,@Convert.ToBase64String(Model.Picture)"
+                                 alt="Animal Picture"
+                                 class="img-fluid rounded-3 shadow-sm"
+                                 style="max-height: 300px; object-fit: cover;" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bg-light border rounded-3 shadow-sm d-flex align-items-center justify-content-center mb-4" style="height: 200px;">
+                            <span class="text-muted">[ No Image Available ]</span>
+                        </div>
+                    }
+
+                    <!-- Animal Info -->
+                    <h5 class="fw-semibold text-dark mb-3">Animal Information</h5>
+                    <div class="list-group list-group-flush mb-4">
+                        <div class="list-group-item">
+                            <strong>Animal Type:</strong> @Model.AnimalTypeID
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Gender:</strong> @Model.Gender
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Weight:</strong> @Model.WeightKg kg
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Age:</strong> @Model.AgeInMonths months
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Health Status:</strong> @Model.HealthStatus
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Current Status:</strong>
+                            <span class="badge bg-dark">@Model.CurrentStatus</span>
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Market Price:</strong> R @Model.MarketPrice.ToString("N2")
+                        </div>
+                        <div class="list-group-item">
+                            <strong>Date Added:</strong> @Model.DateAdded.ToString("dd MMM yyyy")
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
+                        <a href="@Url.Action("Index", "Purchase")"
+                           class="btn btn-outline-dark rounded-3 px-4">
+                            <i class="fas fa-arrow-left"></i> Back to Animals
+                        </a>
+
+                        @if (Model.CurrentStatus == EvergreenRanch.Models.Common.StatusAnimal.ForSale)
+                        {
+                            <a href="@Url.Action("AddToCart", "Purchase", new { animalId = Model.AnimalID })"
+                               class="btn btn-dark rounded-3 px-4">
+                                <i class="fas fa-shopping-cart"></i> Reserve for Purchase
+                            </a>
+                        }
+                        else if (Model.CurrentStatus == EvergreenRanch.Models.Common.StatusAnimal.NotForSale)
+                        {
+                            <div class="alert alert-warning rounded-3 px-3 py-2 mb-0">
+                                <i class="fas fa-exclamation-triangle"></i> Not available for purchase
+                            </div>
+
+                            <!-- Vet Appointment -->
+                            <form asp-action="SelectHealthDate" asp-controller="Vet" method="post" class="d-inline-block">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="animalId" value="@Model.AnimalID" />
+                                <button type="submit" class="btn btn-warning rounded-3 px-4">
+                                    <i class="fas fa-stethoscope"></i> Schedule Vet Appointment
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning rounded-3 px-3 py-2 mb-0">
+                                <i class="fas fa-exclamation-triangle"></i> Not available for purchase
+                            </div>
+                        }
+                    </div>
                 </div>
-            }
-
-            <div class="mt-4 text-center text-md-start">
-                <a href="@Url.Action("Index", "Purchase")" class="btn btn-outline-secondary rounded-pill me-2 mb-2">
-                    <i class="fas fa-arrow-left"></i> Back to Animals For Sale
-                </a>
-
-                @if (Model.CurrentStatus == EvergreenRanch.Models.Common.StatusAnimal.ForSale)
-                {
-                    <a href="@Url.Action("AddToCart", "Purchase", new { animalId = Model.AnimalID })"
-                       class="btn btn-success rounded-pill me-2 mb-2">
-                        <i class="fas fa-shopping-cart"></i> Reserve for Purchase
-                    </a>
-                }
-                else if (Model.CurrentStatus == EvergreenRanch.Models.Common.StatusAnimal.NotForSale)
-                {
-                    <div class="alert alert-warning d-inline-block me-2 mb-2">
-                        <i class="fas fa-exclamation-triangle"></i> This animal is not available for purchase
-                    </div>
-
-                    <!-- Schedule Vet Appointment -->
-                    <form asp-action="SelectHealthDate" asp-controller="Vet" method="post" class="d-inline-block mb-2">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="animalId" value="@Model.AnimalID" />
-                        <button type="submit" class="btn btn-warning rounded-pill">
-                            <i class="fas fa-stethoscope"></i> Schedule Vet Appointment
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <div class="alert alert-warning d-inline-block me-2 mb-2">
-                        <i class="fas fa-exclamation-triangle"></i> This animal is not available for purchase
-                    </div>
-                }
             </div>
         </div>
     </div>

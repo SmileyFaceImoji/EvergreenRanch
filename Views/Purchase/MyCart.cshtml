@@ -1,22 +1,28 @@
 ﻿@model List<Animal>
 
-<div class="container py-4">
-    <h2 class="fw-bold text-center mb-4 text-dark">Your Cart</h2>
+<div class="container py-5">
+    <!-- Page Title -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark display-6">Your Cart</h2>
+        <p class="text-muted">Review your selected animals before checkout</p>
+    </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info text-center py-4 rounded-3 shadow-sm">
-            <i class="fas fa-shopping-cart fa-lg me-2"></i>
-            Your cart is empty
-        </div>
-        <div class="text-center mt-3">
-            <a href="@Url.Action("", "Purchase")" class="btn btn-outline-primary rounded-pill px-4">
+        <!-- Empty Cart Message -->
+        <div class="alert alert-info text-center py-5 rounded-3 shadow-sm">
+            <i class="fas fa-shopping-cart fa-2x mb-3 text-primary"></i>
+            <h5 class="fw-semibold">Your cart is empty</h5>
+            <p class="text-muted">Start browsing and add animals to your cart.</p>
+            <a href="@Url.Action("", "Purchase")"
+               class="btn btn-outline-primary rounded-pill px-4 mt-3">
                 Browse Available Animals
             </a>
         </div>
     }
     else
     {
+        <!-- Cart Items -->
         <div class="row g-4">
             @foreach (var animal in Model)
             {
@@ -39,18 +45,19 @@
                         }
 
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold">@animal.AnimalTag</h5>
-                            <p class="card-text text-muted">
+                            <h5 class="card-title fw-semibold text-dark">@animal.AnimalTag</h5>
+                            <p class="card-text text-muted mb-3">
                                 <strong>Type:</strong> @animal.AnimalTypeID.GetEnumDisplayName()<br>
-                                <strong>Price:</strong> <span class="text-success fw-bold">@animal.MarketPrice.ToString("C")</span>
+                                <strong>Price:</strong>
+                                <span class="text-success fw-bold">@animal.MarketPrice.ToString("C")</span>
                             </p>
                         </div>
 
                         <div class="card-footer bg-white border-0 text-end">
                             <form asp-action="RemoveFromCart" method="post" class="d-inline">
                                 <input type="hidden" name="animalId" value="@animal.AnimalID" />
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
-                                    <i class="fas fa-trash"></i> Remove
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <i class="fas fa-trash me-1"></i> Remove
                                 </button>
                             </form>
                         </div>
@@ -60,10 +67,10 @@
         </div>
 
         <!-- Cart Summary -->
-        <div class="mt-5 p-4 border-top">
+        <div class="mt-5 p-4 border-top rounded-3 shadow-sm bg-white">
             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
-                <h4 class="mb-3 mb-md-0">
-                    Total: <span class="text-success fw-bold">@Model.Sum(a => a.MarketPrice).ToString("C")</span>
+                <h4 class="fw-bold mb-3 mb-md-0 text-dark">
+                    Total: <span class="text-success">@Model.Sum(a => a.MarketPrice).ToString("C")</span>
                 </h4>
                 <a href="@Url.Action("ConfirmAddress", "Checkout")"
                    class="btn btn-success btn-lg rounded-pill px-4">
@@ -85,7 +92,7 @@
     }
 
     h2 {
-        font-size: 1.75rem;
+        font-size: 2rem;
         letter-spacing: 0.5px;
     }
 
@@ -95,19 +102,21 @@
 
         .card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
 
     .btn {
         font-weight: 500;
     }
 
-    @@media (max-width: 576px) {
-        h2
-
-    {
-        font-size: 1.4rem;
+    .alert-info {
+        background-color: #f8fbff;
+        border: 1px solid #d0e7ff;
     }
 
+    @@media (max-width: 576px) {
+        h2 {
+            font-size: 1.5rem;
+        }
     }
 </style>

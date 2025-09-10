@@ -5,20 +5,58 @@
     var animalTag = ViewBag.AnimalTag as string;
 }
 
-<div class="container mt-4">
-    <div class="alert alert-success">
-        <h4 class="alert-heading">Success!</h4>
-        <p>The health check for <strong>@animalTag</strong> has been scheduled successfully.</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-sm border-0 rounded-3 p-5">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-4x text-success"></i>
+                </div>
+                <h1 class="display-5 fw-bold mb-3 text-success">Health Check Scheduled!</h1>
+                <p class="lead text-muted mb-4">
+                    The health check for <strong>@animalTag</strong> has been scheduled successfully.
+                </p>
 
-        @if (scheduledDate.HasValue && !string.IsNullOrEmpty(vetName))
-        {
-            <hr />
-            <p><strong>Scheduled Date:</strong> @scheduledDate.Value.ToString("f")</p>
-            <p><strong>Assigned Vet:</strong> @vetName</p>
-        }
+                @if (scheduledDate.HasValue && !string.IsNullOrEmpty(vetName))
+                {
+                    <div class="mb-3">
+                        <p><strong>Scheduled Date:</strong> @scheduledDate.Value.ToString("f")</p>
+                        <p><strong>Assigned Vet:</strong> @vetName</p>
+                    </div>
+                }
+
+                <a asp-controller="Purchase" asp-action="Index" class="btn btn-primary btn-lg rounded-pill px-4 mt-3">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Animal Index
+                </a>
+            </div>
+        </div>
     </div>
-
-    <a asp-controller="Purchase" asp-action="Index" class="btn btn-primary">
-        <i class="fas fa-arrow-left me-1"></i> Back to Animal Index
-    </a>
 </div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+    h1.display-5 {
+        line-height: 1.1;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+    }
+
+    @@media (max-width: 768px) {
+        .card
+
+    {
+        padding: 3rem 1.5rem;
+    }
+
+    }
+</style>

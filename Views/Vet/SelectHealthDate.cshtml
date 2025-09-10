@@ -2,28 +2,77 @@
     ViewData["Title"] = "Select Health Check Date";
 }
 
-<div class="container py-4">
-    <h2 class="mb-4">Select Health Check Date</h2>
-
-    @using (Html.BeginForm("SelectHealthDate", "Vet", FormMethod.Post, new { @class = "row g-3 align-items-center" }))
-    {
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="animalId" value="@ViewBag.AnimalId" />
-
-        <div class="col-auto">
-            <label for="selectedDate" class="form-label">Choose a date:</label>
-            <input type="date"
-                   id="selectedDate"
-                   name="selectedDate"
-                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
-                   class="form-control"
-                   required />
+<div class="container-fluid bg-light py-5">
+    <div class="row align-items-center justify-content-center">
+        <!-- Hero Text -->
+        <div class="col-lg-6 text-center text-lg-start px-4">
+            <h1 class="display-3 fw-bold text-dark mb-3">
+                Schedule a Vet Appointment
+            </h1>
+            <p class="lead text-muted mb-4">
+                Ensure your animals stay healthy and productive. Select a convenient date for a professional health check and keep your farm thriving.
+            </p>
+            <p class="text-muted mb-4">
+                Our experienced veterinarians provide thorough health checks, vaccinations, and advice tailored to your livestock. Don’t wait – regular check-ups are key to a healthy herd.
+            </p>
         </div>
 
-        <div class="col-auto mt-3">
-            <button type="submit" class="btn btn-outline-success">
-                <i class="fas fa-calendar-check me-1"></i> Select Date
-            </button>
+        <!-- Health Check Form Card -->
+        <div class="col-lg-6 mt-4 mt-lg-0 d-flex justify-content-center">
+            <div class="card shadow-sm border-0 rounded-3 p-4 w-100" style="max-width: 400px;">
+                <h3 class="mb-4 text-center">Select a Health Check Date</h3>
+
+                @using (Html.BeginForm("SelectHealthDate", "Vet", FormMethod.Post, new { @class = "row g-3" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="animalId" value="@ViewBag.AnimalId" />
+
+                    <div class="col-12">
+                        <label for="selectedDate" class="form-label fw-bold">Choose a date:</label>
+                        <input type="date"
+                               id="selectedDate"
+                               name="selectedDate"
+                               min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                               class="form-control"
+                               required />
+                    </div>
+
+                    <div class="col-12 text-center mt-3">
+                        <button type="submit" class="btn btn-success btn-lg rounded-pill px-4">
+                            <i class="fas fa-calendar-check me-2"></i> Confirm Date
+                        </button>
+                    </div>
+                }
+            </div>
         </div>
-    }
+    </div>
 </div>
+
+<style>
+    h1.display-3 {
+        line-height: 1.1;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+    @@media (max-width: 992px) {
+        .display-3 {
+            font-size: 2.5rem;
+        }
+
+        .col-lg-6 {
+            text-align: center !important;
+        }
+    }
+</style>
