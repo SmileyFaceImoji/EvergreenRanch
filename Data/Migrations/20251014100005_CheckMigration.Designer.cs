@@ -4,6 +4,7 @@ using EvergreenRanch.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EvergreenRanch.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251014100005_CheckMigration")]
+    partial class CheckMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -407,90 +410,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("ReturnRequests");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.Shift", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ClockInTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ClockOutTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsClockedIn")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Shifts");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.ShiftChangeRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AdminNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RequestedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RequestedByUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RequestedEndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("RequestedStartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RequestedWorkerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShiftId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShiftId");
-
-                    b.ToTable("ShiftChangeRequests");
                 });
 
             modelBuilder.Entity("EvergreenRanch.Models.TestAttempt", b =>
@@ -974,17 +893,6 @@ namespace EvergreenRanch.Data.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("EvergreenRanch.Models.ShiftChangeRequest", b =>
-                {
-                    b.HasOne("EvergreenRanch.Models.Shift", "Shift")
-                        .WithMany("ChangeRequests")
-                        .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Shift");
-                });
-
             modelBuilder.Entity("EvergreenRanch.Models.WorkerLeave", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
@@ -1071,11 +979,6 @@ namespace EvergreenRanch.Data.Migrations
             modelBuilder.Entity("EvergreenRanch.Models.ReturnRequests", b =>
                 {
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("EvergreenRanch.Models.Shift", b =>
-                {
-                    b.Navigation("ChangeRequests");
                 });
 #pragma warning restore 612, 618
         }

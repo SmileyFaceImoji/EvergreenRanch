@@ -64,10 +64,38 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Training" asp-action="Courses">Learn about the Job</a>
                             </li>
                         }
+                        @if (User.IsInRole("Admin") || User.IsInRole("Worker"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkerTasks" asp-action="MyTasks">Worker Tasks</a>
+                            </li>
+                        }
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkerTasks" asp-action="Index">Learn about the Job</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkerApplication" asp-action="Pending">Pending Job Applications</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkerLeave" asp-action="">Pending Leave Applications</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Worker"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Shift" asp-action="MyShifts">My Shifts</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Shift" asp-action="PendingRequests">Shift Change Requests</a>
                             </li>
                         }
 

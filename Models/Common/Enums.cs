@@ -48,4 +48,20 @@ namespace EvergreenRanch.Models.Common
         Approved = 1, 
         Rejected = 2 
     }
+
+    public enum RequestStatus
+    {
+        Pending,
+        Approved,
+        Rejected
+    }
+
+
+    public enum LeaveStatus
+    {
+        Pending,
+        Approved,
+        Rejected
+    }
+
 }

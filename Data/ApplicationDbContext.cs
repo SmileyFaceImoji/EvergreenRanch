@@ -31,7 +31,8 @@ namespace EvergreenRanch.Data
 
         public DbSet<WorkerTask> WorkerTasks { get; set; }
         public DbSet<WorkerLeave> WorkerLeaves { get; set; }
-
+        public DbSet<Shift> Shifts { get; set; }
+        public DbSet<ShiftChangeRequest> ShiftChangeRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

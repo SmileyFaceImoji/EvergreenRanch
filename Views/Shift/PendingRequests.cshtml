@@ -1,0 +1,62 @@
+﻿@using EvergreenRanch.Models.ViewModels
+@model List<PendingRequestViewModel>
+
+<h2>Pending Shift Change Requests</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No pending shift change requests.
+    </div>
+}
+else
+{
+    @foreach (var request in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Request from: @request.RequesterName (@request.RequesterEmail)</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Original Shift:</strong> @request.OriginalShiftInfo</p>
+
+                @if (request.Request.RequestedStartTime.HasValue || request.Request.RequestedEndTime.HasValue)
+                {
+                    <p><strong>Requested Time Change:</strong></p>
+                    <ul>
+                        @if (request.Request.RequestedStartTime.HasValue)
+                        {
+                            <li>Start: @request.Request.RequestedStartTime.Value.ToString("f")</li>
+                        }
+                        @if (request.Request.RequestedEndTime.HasValue)
+                        {
+                            <li>End: @request.Request.RequestedEndTime.Value.ToString("f")</li>
+                        }
+                    </ul>
+                }
+
+                @if (!string.IsNullOrEmpty(request.Request.RequestedWorkerId))
+                {
+                    <p><strong>Requested Swap With:</strong> @(request.RequestedWorkerName ?? "Unknown User")</p>
+                }
+
+                <p><strong>Reason:</strong> @request.Request.Reason</p>
+                <p><strong>Submitted:</strong> @request.Request.RequestedAt.ToString("f")</p>
+
+                <form asp-action="UpdateRequest" method="post" class="mt-3">
+                    <input type="hidden" name="id" value="@request.Request.Id" />
+
+                    <div class="form-group">
+                        <label for="adminNotes_@request.Request.Id">Admin Notes (Optional)</label>
+                        <textarea name="adminNotes" id="adminNotes_@request.Request.Id" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+}

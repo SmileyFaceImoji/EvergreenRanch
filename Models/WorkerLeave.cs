@@ -1,15 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EvergreenRanch.Models.Common;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EvergreenRanch.Models
 {
-    public enum LeaveStatus
-    {
-        Pending,
-        Approved,
-        Rejected
-    }
-
     public class WorkerLeave
     {
         [Key]

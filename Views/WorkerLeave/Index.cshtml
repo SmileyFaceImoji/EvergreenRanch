@@ -28,7 +28,7 @@
                 <td>@leave.Reason</td>
                 <td>@leave.Status</td>
                 <td>
-                    @if (leave.Status == EvergreenRanch.Models.LeaveStatus.Pending)
+                    @if (leave.Status == EvergreenRanch.Models.Common.LeaveStatus.Pending)
                     {
                         <form asp-action="Approve" method="post" style="display:inline;">
                             <input type="hidden" name="id" value="@leave.Id" />

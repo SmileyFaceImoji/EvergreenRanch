@@ -83,13 +83,15 @@ namespace EvergreenRanch.Controllers
                 if (user != null && !await _um.IsInRoleAsync(user, "Worker"))
                 {
                     await _um.AddToRoleAsync(user, "Worker");
+
+                    // ✅ Create default shifts for the new worker
+                    await DbInitializer.CreateDefaultShiftsForNewWorkerAsync(_db, userId);
                 }
             }
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Result", new { attemptId = attempt.Id });
         }
-
         public async Task<IActionResult> Result(int attemptId)
         {
             var attempt = await _db.TestAttempts.FindAsync(attemptId);

@@ -83,7 +83,7 @@ public class Program
                 await EnsureDriverUsersAsync(userManager, logger);
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await db.Database.MigrateAsync();
-                await DbInitializer.SeedAsync(db);
+                await DbInitializer.SeedAsync(db, userManager);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,53 @@
+﻿@using EvergreenRanch.Models.ViewModels
+@model RequestChangeViewModel
+
+<h2>Request Shift Change</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Original Shift</h5>
+    </div>
+    <div class="card-body">
+        <p><strong>Time:</strong> @Model.OriginalStartTime.ToString("f") - @Model.OriginalEndTime.ToString("t")</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+    </div>
+</div>
+
+<form asp-action="RequestChange" method="post" class="mt-4">
+    <input type="hidden" asp-for="ShiftId" />
+    <input type="hidden" asp-for="OriginalStartTime" />
+    <input type="hidden" asp-for="OriginalEndTime" />
+    <input type="hidden" asp-for="Location" />
+
+    <div class="form-group">
+        <label asp-for="RequestedStartTime">New Start Time</label>
+        <input asp-for="RequestedStartTime" type="datetime-local" class="form-control" />
+        <small class="form-text text-muted">Leave empty if no change to start time</small>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RequestedEndTime">New End Time</label>
+        <input asp-for="RequestedEndTime" type="datetime-local" class="form-control" />
+        <small class="form-text text-muted">Leave empty if no change to end time</small>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RequestedWorkerId">Swap With Coworker</label>
+        <select asp-for="RequestedWorkerId" class="form-control">
+            <option value="">-- No swap, just time change --</option>
+            @foreach (var worker in Model.AvailableWorkers)
+            {
+                <option value="@worker.Id">@worker.UserName - @worker.Email</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Reason">Reason for Change</label>
+        <textarea asp-for="Reason" class="form-control" rows="4" placeholder="Please explain why you need this change..."></textarea>
+        <span asp-validation-for="Reason" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Request</button>
+    <a asp-action="MyShifts" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,5 +1,7 @@
 ﻿using EvergreenRanch.Data;
 using EvergreenRanch.Models;
+using EvergreenRanch.Models.Common;
+using EvergreenRanch.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -32,30 +34,51 @@ namespace EvergreenRanch.Controllers
             return View(leaves);
         }
 
+        // GET: Apply for leave
         [Authorize(Roles = "Worker")]
         public IActionResult Apply()
         {
-            return View();
+            var model = new WorkerLeaveApplyViewModel
+            {
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today.AddDays(1)
+            };
+            return View(model);
         }
 
+        // POST: Apply for leave
         [HttpPost]
         [Authorize(Roles = "Worker")]
-        public async Task<IActionResult> Apply(WorkerLeave leave)
+        public async Task<IActionResult> Apply(WorkerLeaveApplyViewModel model)
         {
-            var userId = _um.GetUserId(User)!;
-
-            // Validation: end must be after start
-            if (leave.EndDate < leave.StartDate)
+            // Custom validation: end date must be after start date
+            if (model.EndDate < model.StartDate)
             {
-                ModelState.AddModelError("", "End date must be after start date.");
+                ModelState.AddModelError("EndDate", "End date must be after start date.");
+            }
+
+            // Custom validation: start date cannot be in the past
+            if (model.StartDate < DateTime.Today)
+            {
+                ModelState.AddModelError("StartDate", "Start date cannot be in the past.");
             }
 
             if (!ModelState.IsValid)
-                return View(leave);
+            {
+                return View(model);
+            }
 
-            leave.UserId = userId;
-            leave.Status = LeaveStatus.Pending;
-            leave.AppliedOn = DateTime.UtcNow;
+            var userId = _um.GetUserId(User)!;
+
+            var leave = new WorkerLeave
+            {
+                UserId = userId,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                Reason = model.Reason,
+                Status = LeaveStatus.Pending,
+                AppliedOn = DateTime.UtcNow
+            };
 
             _db.WorkerLeaves.Add(leave);
             await _db.SaveChangesAsync();
@@ -63,7 +86,6 @@ namespace EvergreenRanch.Controllers
             TempData["Message"] = "Leave request submitted successfully.";
             return RedirectToAction(nameof(MyLeaves));
         }
-
         // Admin: View all leave requests
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()

@@ -1,0 +1,30 @@
+﻿@model List<Shift>
+<h2>My Shifts</h2>
+
+@foreach (var shift in Model)
+{
+    <div class="shift-card">
+        <h4>@shift.StartTime.ToString("f") - @shift.EndTime.ToString("t")</h4>
+        <p>@shift.Location - @shift.Description</p>
+        <p>Status: @(shift.IsClockedIn ? "Clocked In" : "Not Clocked In")</p>
+
+        @if (!shift.IsClockedIn && shift.StartTime <= DateTime.Now && shift.EndTime > DateTime.Now)
+        {
+            <form method="post" action="@Url.Action("ClockInOut")">
+                <input type="hidden" name="ShiftId" value="@shift.Id" />
+                <input type="hidden" name="Action" value="in" />
+                <button type="submit" class="btn btn-success">Clock In</button>
+            </form>
+        }
+        else if (shift.IsClockedIn)
+        {
+            <form method="post" action="@Url.Action("ClockInOut")">
+                <input type="hidden" name="ShiftId" value="@shift.Id" />
+                <input type="hidden" name="Action" value="out" />
+                <button type="submit" class="btn btn-warning">Clock Out</button>
+            </form>
+        }
+
+        <a href="@Url.Action("RequestChange", new { id = shift.Id })" class="btn btn-info">Request Change</a>
+    </div>
+}
