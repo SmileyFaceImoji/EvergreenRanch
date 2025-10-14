@@ -41,4 +41,11 @@ namespace EvergreenRanch.Models.Common
         Digit = 4,
         Special = 8
     }
+
+    public enum ApplicationStatus
+    { 
+        Pending = 0, 
+        Approved = 1, 
+        Rejected = 2 
+    }
 }

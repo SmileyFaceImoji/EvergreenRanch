@@ -1,0 +1,12 @@
+﻿<!-- File: Views/Test/Result.cshtml -->
+@model EvergreenRanch.Models.TestAttempt
+@{
+    ViewData["Title"] = "Test Result";
+}
+<h2>Test Result</h2>
+<p>Score: @Model.Score %</p>
+<p>Passed: @(Model.Passed ? "Yes" : "No")</p>
+@if (Model.Passed)
+{
+    <a asp-controller="Certificate" asp-action="MyCertificates" class="btn btn-success">View Certificate</a>
+}

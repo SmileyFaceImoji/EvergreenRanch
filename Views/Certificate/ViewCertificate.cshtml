@@ -1,0 +1,43 @@
+﻿@model EvergreenRanch.Controllers.CertificateController.CertificateViewModel
+
+@{
+    ViewData["Title"] = "Certificate";
+}
+
+<div class="certificate-container text-center border rounded p-5 mt-4 shadow-lg bg-light">
+    <h2 class="text-uppercase mb-4">Certificate of Completion</h2>
+
+    <p class="lead">This certifies that</p>
+    <h3 class="fw-bold">@Model.UserName</h3>
+
+    <p class="mt-3">has successfully completed the course</p>
+    <h4 class="fw-semibold">“@Model.CourseTitle”</h4>
+
+    @if (!string.IsNullOrWhiteSpace(Model.CourseDescription))
+    {
+        <p class="text-muted fst-italic">(@Model.CourseDescription)</p>
+    }
+
+    <div class="mt-5">
+        <p><strong>Date Issued:</strong> @Model.Certificate.IssuedOn.ToLocalTime().ToFullDate()</p>
+        <p><strong>Certificate ID:</strong> @Model.Certificate.CertificateGuid</p>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="MyCertificates" class="btn btn-outline-secondary me-2">← Back to Certificates</a>
+        <a asp-action="DownloadCertificatePdf"
+           asp-route-id="@Model.Certificate.CertificateGuid"
+           class="btn btn-primary">
+            Download PDF
+        </a>
+    </div>
+</div>
+
+<style>
+    .certificate-container {
+        max-width: 700px;
+        margin: auto;
+        background: #fffef8;
+        border: 5px solid #caa45d;
+    }
+</style>

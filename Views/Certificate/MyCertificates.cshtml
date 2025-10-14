@@ -1,0 +1,43 @@
+﻿@model List<EvergreenRanch.Controllers.CertificateController.CertificateViewModel>
+
+@{
+    ViewData["Title"] = "My Certificates";
+}
+
+<h2>My Certificates</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no certificates yet.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Course Title</th>
+                <th>Description</th>
+                <th>Issued On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.CourseTitle</td>
+                    <td>@c.CourseDescription</td>
+                    <td>@c.Certificate.IssuedOn.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <a asp-controller="Certificate"
+                           asp-action="ViewCertificate"
+                           asp-route-id="@c.Certificate.CertificateGuid"
+                           class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

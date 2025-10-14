@@ -1,0 +1,32 @@
+﻿@model EvergreenRanch.Models.WorkerTask
+@{
+    var workers = ViewBag.Workers as IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>;
+}
+
+<h2>Assign New Task</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group mb-3">
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Assign To</label>
+        <select asp-for="AssignedToUserId" class="form-control">
+            <option value="">-- Select Worker --</option>
+            @foreach (var worker in workers)
+            {
+                <option value="@worker.Id">@worker.Email</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Assign Task</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

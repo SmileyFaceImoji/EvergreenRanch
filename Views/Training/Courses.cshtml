@@ -1,0 +1,16 @@
+﻿<!-- File: Views/Training/Courses.cshtml -->
+@model List<EvergreenRanch.Models.Course>
+@{
+    ViewData["Title"] = "Courses";
+}
+<h2>Courses</h2>
+<ul>
+    @foreach (var c in Model)
+    {
+        <li>
+            <h4>@c.Title</h4>
+            <p>@c.Description</p>
+            <a asp-controller="Training" asp-action="Modules" asp-route-courseId="@c.Id" class="btn btn-primary">Open</a>
+        </li>
+    }
+</ul>

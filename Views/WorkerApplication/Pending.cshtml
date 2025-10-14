@@ -1,0 +1,29 @@
+﻿<!-- File: Views/WorkerApplication/Pending.cshtml (Admin view) -->
+@model List<EvergreenRanch.Models.WorkerApplication>
+@{
+    ViewData["Title"] = "Pending Worker Applications";
+}
+<h2>Pending Applications</h2>
+<table class="table">
+    <thead><tr><th>UserId</th><th>AppliedOn</th><th>Notes</th><th>Action</th></tr></thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.UserId</td>
+                <td>@a.AppliedOn.ToLocalTime()</td>
+                <td>@a.Notes</td>
+                <td>
+                    <form asp-action="Approve" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@a.Id" />
+                        <button class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form asp-action="Reject" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@a.Id" />
+                        <button class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

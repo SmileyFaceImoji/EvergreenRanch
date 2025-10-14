@@ -1,0 +1,30 @@
+﻿<!-- File: Views/WorkerApplication/Apply.cshtml -->
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model EvergreenRanch.Models.WorkerApplication
+    ViewData["Title"] = "Apply to be Worker";
+}
+<h2>Apply to be Worker</h2>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+@if (Model.Id != 0)
+{
+    <p>Application status: <strong>@Model.Status</strong> (applied on @Model.AppliedOn.ToLocalTime())</p>
+    <form asp-action="ApplyPost" method="post">
+        <textarea name="notes" class="form-control" placeholder="Notes">@Model.Notes</textarea>
+        <button class="btn btn-primary mt-2">Re-submit</button>
+    </form>
+}
+else
+{
+    <form asp-action="ApplyPost" method="post">
+        <div class="form-group">
+            <label>Why do you want to work here?</label>
+            <textarea name="notes" class="form-control"></textarea>
+        </div>
+        <button class="btn btn-primary mt-2">Apply</button>
+    </form>
+}

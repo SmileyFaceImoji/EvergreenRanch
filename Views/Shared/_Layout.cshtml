@@ -52,6 +52,25 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Vet" asp-action="Index">Vet</a>
                             </li>
                         }
+                        @if (!User.IsInRole("Admin") || !User.IsInRole("Worker"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkerApplication" asp-action="Apply">Join the Team!</a>
+                            </li>
+                        }
+                        @if (!User.IsInRole("Admin") || !User.IsInRole("Worker"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Training" asp-action="Courses">Learn about the Job</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkerTasks" asp-action="Index">Learn about the Job</a>
+                            </li>
+                        }
+
 
 
                     </ul>

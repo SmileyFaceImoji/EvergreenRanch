@@ -7,7 +7,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "EvergreenRanch20250827094732ResourceGroup",
+      "defaultValue": "EvergreenRanch20251014014452ResourceGroup",
       "metadata": {
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
       }
@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "EvergreenRanch20250909222831",
+      "defaultValue": "EvergreenRanch20251014014452",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
