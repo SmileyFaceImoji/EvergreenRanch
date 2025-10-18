@@ -1,25 +1,51 @@
-﻿<!-- File: Views/WorkerApplication/Pending.cshtml (Admin view) -->
-@model List<EvergreenRanch.Models.WorkerApplication>
-@{
-    ViewData["Title"] = "Pending Worker Applications";
-}
-<h2>Pending Applications</h2>
-<table class="table">
-    <thead><tr><th>UserId</th><th>AppliedOn</th><th>Notes</th><th>Action</th></tr></thead>
+﻿@model IEnumerable<EvergreenRanch.Models.WorkerApplication>
+
+<h2>Pending Worker Applications</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Applied On</th>
+            <th>Documents</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
     <tbody>
-        @foreach (var a in Model)
+        @foreach (var app in Model)
         {
             <tr>
-                <td>@a.UserId</td>
-                <td>@a.AppliedOn.ToLocalTime()</td>
-                <td>@a.Notes</td>
+                <td>@app.Id</td>
+                <td>@app.UserId</td>
+                <td>@app.AppliedOn.ToLocalTime()</td>
+                <td>
+                    @{
+                        var docs = new List<string>();
+
+                        if (!string.IsNullOrEmpty(app.IdDocumentPath))
+                        {
+                            docs.Add($"<a href='{app.IdDocumentPath}' target='_blank'>ID</a>");
+                        }
+                        if (!string.IsNullOrEmpty(app.CvPath))
+                        {
+                            docs.Add($"<a href='{app.CvPath}' target='_blank'>CV</a>");
+                        }
+                        if (!string.IsNullOrEmpty(app.CoverLetterPath))
+                        {
+                            docs.Add($"<a href='{app.CoverLetterPath}' target='_blank'>Cover Letter</a>");
+                        }
+                    }
+
+                    @Html.Raw(string.Join(" | ", docs))
+                </td>
                 <td>
                     <form asp-action="Approve" method="post" style="display:inline">
-                        <input type="hidden" name="id" value="@a.Id" />
+                        <input type="hidden" name="id" value="@app.Id" />
                         <button class="btn btn-success btn-sm">Approve</button>
                     </form>
                     <form asp-action="Reject" method="post" style="display:inline">
-                        <input type="hidden" name="id" value="@a.Id" />
+                        <input type="hidden" name="id" value="@app.Id" />
                         <button class="btn btn-danger btn-sm">Reject</button>
                     </form>
                 </td>

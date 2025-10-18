@@ -29,30 +29,58 @@ namespace EvergreenRanch.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ApplyPost(string? notes)
+        [HttpPost]
+        public async Task<IActionResult> ApplyPost(string? notes, IFormFile? IdDocument, IFormFile? CvFile, IFormFile? CoverLetterFile)
         {
             var userId = _um.GetUserId(User)!;
             var existing = await _db.WorkerApplications.FirstOrDefaultAsync(w => w.UserId == userId);
+
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+            string? SaveFile(IFormFile? file)
+            {
+                if (file == null || file.Length == 0) return null;
+                string filePath = Path.Combine(uploadsFolder, Guid.NewGuid() + Path.GetExtension(file.FileName));
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+                return "/uploads/" + Path.GetFileName(filePath);
+            }
+
+            var idDocPath = SaveFile(IdDocument);
+            var cvPath = SaveFile(CvFile);
+            var coverPath = SaveFile(CoverLetterFile);
+
             if (existing != null)
             {
-                if (existing.Status == ApplicationStatus.Pending)
-                {
-                    TempData["Message"] = "Your application is pending.";
-                    return RedirectToAction(nameof(Apply));
-                }
                 existing.Notes = notes;
                 existing.AppliedOn = DateTime.UtcNow;
                 existing.Status = ApplicationStatus.Pending;
+                existing.IdDocumentPath = idDocPath ?? existing.IdDocumentPath;
+                existing.CvPath = cvPath ?? existing.CvPath;
+                existing.CoverLetterPath = coverPath ?? existing.CoverLetterPath;
                 _db.WorkerApplications.Update(existing);
             }
             else
             {
-                _db.WorkerApplications.Add(new WorkerApplication { UserId = userId, Notes = notes, Status = ApplicationStatus.Pending });
+                _db.WorkerApplications.Add(new WorkerApplication
+                {
+                    UserId = userId,
+                    Notes = notes,
+                    IdDocumentPath = idDocPath,
+                    CvPath = cvPath,
+                    CoverLetterPath = coverPath,
+                    Status = ApplicationStatus.Pending
+                });
             }
+
             await _db.SaveChangesAsync();
-            TempData["Message"] = "Application submitted.";
+            TempData["Message"] = "Application submitted successfully.";
             return RedirectToAction(nameof(Apply));
         }
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Pending()

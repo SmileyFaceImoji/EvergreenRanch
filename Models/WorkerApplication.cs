@@ -13,5 +13,9 @@ namespace EvergreenRanch.Models
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
         public DateTime AppliedOn { get; set; } = DateTime.UtcNow;
         public string? Notes { get; set; }
+        // New fields
+        public string? IdDocumentPath { get; set; }
+        public string? CvPath { get; set; }
+        public string? CoverLetterPath { get; set; } 
     }
 }
