@@ -242,7 +242,33 @@ Each exercise strengthens your control and builds your horse’s agility and con
                 };
                 await db.TestQuestions.AddRangeAsync(testQuestions);
                 await db.SaveChangesAsync();
+            }// ✅ TEMPORARY: Give every worker 20 leave days for the year so far
+            var workers = await userManager.GetUsersInRoleAsync("Worker");
+
+            foreach (var worker in workers)
+            {
+                var existingBalance = await db.WorkerLeaveBalances
+                    .FirstOrDefaultAsync(b => b.UserId == worker.Id);
+
+                if (existingBalance == null)
+                {
+                    db.WorkerLeaveBalances.Add(new WorkerLeaveBalance
+                    {
+                        UserId = worker.Id,
+                        AvailableDays = 20,
+                        LastAccrualDate = DateTime.UtcNow
+                    });
+                }
+                else
+                {
+                    existingBalance.AvailableDays = 20;
+                    existingBalance.LastAccrualDate = DateTime.UtcNow;
+                    db.WorkerLeaveBalances.Update(existingBalance);
+                }
             }
+
+            await db.SaveChangesAsync();
+
 
             // ✅ Seed default shifts for all existing workers
             await SeedDefaultShiftsAsync(db, userManager);

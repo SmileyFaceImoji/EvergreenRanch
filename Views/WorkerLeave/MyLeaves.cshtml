@@ -1,13 +1,19 @@
-﻿@model IEnumerable<EvergreenRanch.Models.WorkerLeave>
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<IdentityUser> UserManager
+@inject EvergreenRanch.Data.ApplicationDbContext Db
+
+@{
+    var userId = UserManager.GetUserId(User);
+    var balance = await Db.WorkerLeaveBalances.FirstOrDefaultAsync(b => b.UserId == userId);
+    int available = balance?.AvailableDays ?? 0;
+}
 
 <h2>My Leave Applications</h2>
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-info">@TempData["Message"]</div>
-}
-
-<a asp-action="Apply" class="btn btn-primary mb-3">Apply for Leave</a>
+<div class="alert alert-info">
+    <strong>Available Leave Days:</strong> @available
+</div>
 
 <table class="table table-striped">
     <thead>

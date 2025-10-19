@@ -18,5 +18,7 @@ namespace EvergreenRanch.Models.ViewModels
         [StringLength(500, ErrorMessage = "Reason cannot exceed 500 characters")]
         [Display(Name = "Reason for Leave")]
         public string Reason { get; set; } = default!;
+        public int AvailableDays { get; set; }
+
     }
 }
