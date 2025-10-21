@@ -1,0 +1,43 @@
+﻿@model IEnumerable<dynamic>
+
+<h2>Shift Attendance Summary (Monthly)</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Worker</th>
+            <th>Month</th>
+            <th>Total Shifts</th>
+            <th>Total Hours</th>
+            <th>Late Arrivals</th>
+            <th>Early Leaves</th>
+            <th>Hourly Rate (R)</th>
+            <th>Total Pay (R)</th>
+            <th>Action</th> <!-- New column -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Worker</td>
+                <td>@item.Month</td>
+                <td>@item.TotalShifts</td>
+                <td>@item.TotalHours.ToString("F2") hrs</td>
+                <td>@item.LateCount</td>
+                <td>@item.EarlyLeaves</td>
+                <td>@item.HourlyRate.ToString("F2")</td>
+                <td>@item.TotalPay.ToString("F2")</td>
+                <td>
+                    @if (item.TotalPay > 0)
+                    {
+                        <form asp-action="PayWorker" method="post" style="display:inline;">
+                            <input type="hidden" name="workerId" value="@item.WorkerId" />
+                            <button type="submit" class="btn btn-success btn-sm">Pay Worker</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

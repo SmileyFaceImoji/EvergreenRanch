@@ -16,6 +16,21 @@ namespace EvergreenRanch.Models
         public bool IsClockedIn { get; set; }
         public DateTime? ClockInTime { get; set; }
         public DateTime? ClockOutTime { get; set; }
+        // 🆕 Shift categorization and pay
+        public ShiftType Type { get; set; } = ShiftType.Morning;
+        public bool IsOvertime { get; set; } = false;
+        public decimal PayRate { get; set; } = 120.00m;
+
+        public enum ShiftType
+        {
+            Morning,
+            Afternoon,
+            Night,
+            Weekend
+        }
+
+        // 🆕 Navigation to attendance
+        public ICollection<ShiftAttendance>? Attendances { get; set; }
 
         // Navigation (optional)
         public virtual ICollection<ShiftChangeRequest>? ChangeRequests { get; set; }

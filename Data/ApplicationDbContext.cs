@@ -1,4 +1,5 @@
 ﻿using EvergreenRanch.Models;
+using EvergreenRanch.Models.Common;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
@@ -32,6 +33,8 @@ namespace EvergreenRanch.Data
         public DbSet<WorkerTask> WorkerTasks { get; set; }
         public DbSet<WorkerLeave> WorkerLeaves { get; set; }
         public DbSet<WorkerLeaveBalance> WorkerLeaveBalances { get; set; }
+        public DbSet<ShiftAttendance> ShiftAttendances { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         public DbSet<Shift> Shifts { get; set; }
         public DbSet<ShiftChangeRequest> ShiftChangeRequests { get; set; }

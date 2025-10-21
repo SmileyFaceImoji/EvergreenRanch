@@ -1,0 +1,29 @@
+﻿@model IEnumerable<EvergreenRanch.Models.Common.Payment>
+
+<h2>Payment History</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Worker</th>
+            <th>Email</th>
+            <th>Total Hours</th>
+            <th>Total Pay (R)</th>
+            <th>Rate (R/hr)</th>
+            <th>Paid On</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Worker?.UserName</td>
+                <td>@p.Worker?.Email</td>
+                <td>@p.TotalHours</td>
+                <td>@p.TotalPay</td>
+                <td>@p.HourlyRate</td>
+                <td>@p.PaymentDate.ToString("dd MMM yyyy, HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>

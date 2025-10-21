@@ -32,33 +32,97 @@ namespace EvergreenRanch.Controllers
             return View(shifts);
         }
 
-        // POST: Clock in/out
         [HttpPost]
         public async Task<IActionResult> ClockInOut(ClockInOutViewModel model)
         {
             var userId = _userManager.GetUserId(User);
-            var shift = await _context.Shifts
-                .FirstOrDefaultAsync(s => s.Id == model.ShiftId && s.WorkerId == userId);
+            var shift = await _context.Shifts.FirstOrDefaultAsync(s => s.Id == model.ShiftId && s.WorkerId == userId);
 
             if (shift == null)
-            {
                 return NotFound();
-            }
 
             if (model.Action == "in")
             {
                 shift.IsClockedIn = true;
                 shift.ClockInTime = DateTime.UtcNow;
+
+                // 🆕 Log attendance
+                _context.ShiftAttendances.Add(new ShiftAttendance
+                {
+                    ShiftId = shift.Id,
+                    WorkerId = userId,
+                    ClockInTime = DateTime.UtcNow
+                });
             }
             else if (model.Action == "out")
             {
                 shift.IsClockedIn = false;
                 shift.ClockOutTime = DateTime.UtcNow;
+
+                var attendance = await _context.ShiftAttendances
+                    .Where(a => a.ShiftId == shift.Id && a.WorkerId == userId && a.ClockOutTime == null)
+                    .OrderByDescending(a => a.ClockInTime)
+                    .FirstOrDefaultAsync();
+
+                if (attendance != null)
+                    attendance.ClockOutTime = DateTime.UtcNow;
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(MyShifts));
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Summary()
+        {
+            var attendances = await _context.ShiftAttendances
+                .Include(a => a.Shift)
+                .ToListAsync();
+
+            // Group by WorkerId and Month-Year
+            var summary = attendances
+                .GroupBy(a => new
+                {
+                    a.WorkerId,
+                    Month = a.ClockInTime.Month,
+                    Year = a.ClockInTime.Year
+                })
+                .Select(g => new
+                {
+                    WorkerId = g.Key.WorkerId,
+                    Month = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"),
+                    TotalShifts = g.Count(),
+                    TotalHours = g.Sum(a => a.TotalHours),
+                    LateCount = g.Count(a => a.IsLate),
+                    EarlyLeaves = g.Count(a => a.LeftEarly),
+                    HourlyRate = g.Average(a => a.Shift.PayRate),
+                    TotalPay = g.Sum(a => a.TotalHours * (double)a.Shift.PayRate)
+                })
+                .OrderBy(x => x.WorkerId)
+                .ThenByDescending(x => x.Month)
+                .ToList();
+
+            // Fetch worker emails for all WorkerIds
+            var workerIds = summary.Select(s => s.WorkerId).ToList();
+            var workers = await _context.Users
+                .Where(u => workerIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id, u => u.Email);
+
+            // Map WorkerId -> Email
+            var model = summary.Select(s => new
+            {
+                Worker = workers.ContainsKey(s.WorkerId) ? workers[s.WorkerId] : s.WorkerId,
+                s.Month,
+                s.TotalShifts,
+                s.TotalHours,
+                s.LateCount,
+                s.EarlyLeaves,
+                s.HourlyRate,
+                s.TotalPay
+            }).ToList();
+
+            return View(model);
+        }
+
 
         // GET: Request shift change
         public async Task<IActionResult> RequestChange(int id)
@@ -162,7 +226,6 @@ namespace EvergreenRanch.Controllers
 
             return View(viewModel);
         }
-        // POST: Admin - Approve/Reject request
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRequest(int id, string action, string adminNotes)
@@ -172,15 +235,26 @@ namespace EvergreenRanch.Controllers
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (request == null)
-            {
                 return NotFound();
-            }
 
             if (action == "approve")
             {
+                // ✅ Overlap Prevention
+                bool hasOverlap = await _context.Shifts
+                    .AnyAsync(s => s.WorkerId == (request.RequestedWorkerId ?? request.Shift.WorkerId)
+                                && s.Id != request.ShiftId
+                                && ((request.RequestedStartTime ?? request.Shift.StartTime) < s.EndTime &&
+                                    (request.RequestedEndTime ?? request.Shift.EndTime) > s.StartTime));
+
+                if (hasOverlap)
+                {
+                    TempData["ErrorMessage"] = "Shift overlaps with an existing one for this worker!";
+                    return RedirectToAction(nameof(PendingRequests));
+                }
+
+                // Approve request
                 request.Status = RequestStatus.Approved;
 
-                // Update the shift if approved
                 if (request.RequestedWorkerId != null)
                     request.Shift.WorkerId = request.RequestedWorkerId;
 
@@ -200,5 +274,45 @@ namespace EvergreenRanch.Controllers
 
             return RedirectToAction(nameof(PendingRequests));
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PayWorker(string workerId)
+        {
+            double hourlyRate = 120.0; // Example rate
+            var totalHours = await _context.ShiftAttendances
+                .Where(a => a.WorkerId == workerId)
+                .SumAsync(a => a.TotalHours);
+
+            var totalPay = Math.Round(totalHours * hourlyRate, 2);
+
+            var payment = new Payment
+            {
+                WorkerId = workerId,
+                TotalHours = totalHours,
+                HourlyRate = hourlyRate,
+                TotalPay = totalPay,
+                PaymentDate = DateTime.Now,
+                IsPaid = true
+            };
+
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Payment recorded successfully!";
+            return RedirectToAction(nameof(Summary));
+        }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PaymentHistory()
+        {
+            var payments = await _context.Payments
+                .Include(p => p.Worker)
+                .OrderByDescending(p => p.PaymentDate)
+                .ToListAsync();
+
+            return View(payments);
+        }
+
+
     }
 }

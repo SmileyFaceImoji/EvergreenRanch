@@ -381,6 +381,26 @@ Each exercise strengthens your control and builds your horse’s agility and con
 
             await db.Shifts.AddRangeAsync(shifts);
             await db.SaveChangesAsync();
+            // Seed attendances for each shift so payments work
+            var allShifts = await db.Shifts.ToListAsync();
+
+            foreach (var shift in allShifts)
+            {
+                // Only create attendance if none exists
+                if (!await db.ShiftAttendances.AnyAsync(a => a.ShiftId == shift.Id))
+                {
+                    db.ShiftAttendances.Add(new ShiftAttendance
+                    {
+                        ShiftId = shift.Id,
+                        WorkerId = shift.WorkerId,
+                        ClockInTime = shift.StartTime,
+                        ClockOutTime = shift.EndTime
+                    });
+                }
+            }
+
+            await db.SaveChangesAsync();
+
         }
     }
 }
