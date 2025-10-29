@@ -35,6 +35,8 @@ namespace EvergreenRanch.Data
         public DbSet<WorkerLeaveBalance> WorkerLeaveBalances { get; set; }
         public DbSet<ShiftAttendance> ShiftAttendances { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<TrainingSession> TrainingSessions { get; set; }
+        public DbSet<TrainingRegistration> TrainingRegistrations { get; set; }
 
         public DbSet<Shift> Shifts { get; set; }
         public DbSet<ShiftChangeRequest> ShiftChangeRequests { get; set; }

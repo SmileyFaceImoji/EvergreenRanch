@@ -44,5 +44,16 @@ namespace EvergreenRanch.Models.ViewModels
         public string RequesterEmail { get; set; } = default!;
         public string? RequestedWorkerName { get; set; }
         public string OriginalShiftInfo { get; set; } = default!;
+
+    }
+
+    public class ShiftSummaryViewModel
+    {
+        public string WorkerName { get; set; } = default!;
+        public int TotalShifts { get; set; }
+        public TimeSpan TotalHours { get; set; }
+        public decimal TotalEarnings { get; set; }
+
     }
 }
+

@@ -1,9 +1,24 @@
-﻿@model IEnumerable<dynamic>
+﻿@{
+    ViewData["Title"] = "Shift Attendance Summary (Monthly)";
+    // Simulated data for display
+    var month = DateTime.Now.ToString("MMMM yyyy");
+    var hourlyRate = 120m;
 
-<h2>Shift Attendance Summary (Monthly)</h2>
+    var workers = new[]
+    {
+        new { WorkerId = "Worker 1", Month = month, TotalShifts = 8, TotalHours = 23m, LateCount = 1, EarlyLeaves = 0, HourlyRate = hourlyRate, TotalPay = 23m * hourlyRate },
+        new { WorkerId = "Worker 2", Month = month, TotalShifts = 10, TotalHours = 32m, LateCount = 0, EarlyLeaves = 1, HourlyRate = hourlyRate, TotalPay = 32m * hourlyRate }
+    };
+}
 
-<table class="table table-bordered table-striped">
-    <thead>
+<h2>@ViewData["Title"]</h2>
+
+<div id="paymentSuccessAlert" class="alert alert-success d-none">
+    ✅ Worker has been paid successfully!
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-success">
         <tr>
             <th>Worker</th>
             <th>Month</th>
@@ -13,31 +28,104 @@
             <th>Early Leaves</th>
             <th>Hourly Rate (R)</th>
             <th>Total Pay (R)</th>
-            <th>Action</th> <!-- New column -->
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in workers)
         {
-            <tr>
-                <td>@item.Worker</td>
+            <tr id="row-@item.WorkerId.Replace(" ", "")">
+                <td>@item.WorkerId</td>
                 <td>@item.Month</td>
                 <td>@item.TotalShifts</td>
-                <td>@item.TotalHours.ToString("F2") hrs</td>
+                <td id="hours-@item.WorkerId.Replace(" ", "")">@item.TotalHours.ToString("F2") hrs</td>
                 <td>@item.LateCount</td>
                 <td>@item.EarlyLeaves</td>
                 <td>@item.HourlyRate.ToString("F2")</td>
-                <td>@item.TotalPay.ToString("F2")</td>
+                <td id="pay-@item.WorkerId.Replace(" ", "")">@item.TotalPay.ToString("F2")</td>
                 <td>
-                    @if (item.TotalPay > 0)
-                    {
-                        <form asp-action="PayWorker" method="post" style="display:inline;">
-                            <input type="hidden" name="workerId" value="@item.WorkerId" />
-                            <button type="submit" class="btn btn-success btn-sm">Pay Worker</button>
-                        </form>
-                    }
+                    <button class="btn btn-success btn-sm"
+                            id="payBtn-@item.WorkerId.Replace(" ", "")"
+                            onclick="openPaymentModal('@item.WorkerId', '@item.TotalPay', '@item.Month')">
+                        Pay Worker
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Payment Simulation Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="paymentForm" method="post">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="paymentModalLabel">EasyPay Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="workerIdField" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Month</label>
+                        <input type="text" class="form-control" id="monthField" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Amount to Pay (R)</label>
+                        <input type="text" class="form-control" id="amountField" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" required>
+                            <option value="">Select...</option>
+                            <option>Bank Transfer</option>
+                            <option>Mobile Payment</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="confirmPayment()">Confirm Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentWorkerId = null;
+
+        function openPaymentModal(workerId, amount, month) {
+            currentWorkerId = workerId.replace(/\s/g, '');
+            document.getElementById('workerIdField').value = workerId;
+            document.getElementById('amountField').value = amount;
+            document.getElementById('monthField').value = month;
+
+            const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            modal.show();
+        }
+
+        function confirmPayment() {
+            const modalElement = document.getElementById('paymentModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+
+            const alertBox = document.getElementById('paymentSuccessAlert');
+            alertBox.classList.remove('d-none');
+
+            document.getElementById(`payBtn-${currentWorkerId}`).classList.add('d-none');
+            document.getElementById(`hours-${currentWorkerId}`).innerText = '0.00 hrs';
+            document.getElementById(`pay-${currentWorkerId}`).innerText = '0.00';
+
+            setTimeout(() => {
+                alertBox.classList.add('d-none');
+            }, 4000);
+        }
+    </script>
+}

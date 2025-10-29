@@ -88,14 +88,14 @@ namespace EvergreenRanch.Controllers
                 })
                 .Select(g => new
                 {
-                    WorkerId = g.Key.WorkerId,
+                    WorkerId = g.Key.WorkerId, // Make sure this is included
                     Month = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"),
                     TotalShifts = g.Count(),
                     TotalHours = g.Sum(a => a.TotalHours),
                     LateCount = g.Count(a => a.IsLate),
                     EarlyLeaves = g.Count(a => a.LeftEarly),
-                    HourlyRate = g.Average(a => a.Shift.PayRate),
-                    TotalPay = g.Sum(a => a.TotalHours * (double)a.Shift.PayRate)
+                    HourlyRate = g.Average(a =>a.hourlyRate), // Add null check
+                    TotalPay = g.Sum(a => a.TotalHours * (double)(a.Shift?.PayRate ?? 0)) // Add null check
                 })
                 .OrderBy(x => x.WorkerId)
                 .ThenByDescending(x => x.Month)
@@ -107,9 +107,10 @@ namespace EvergreenRanch.Controllers
                 .Where(u => workerIds.Contains(u.Id))
                 .ToDictionaryAsync(u => u.Id, u => u.Email);
 
-            // Map WorkerId -> Email
+            // Map WorkerId -> Email but keep WorkerId
             var model = summary.Select(s => new
             {
+                WorkerId = s.WorkerId, // Add this line
                 Worker = workers.ContainsKey(s.WorkerId) ? workers[s.WorkerId] : s.WorkerId,
                 s.Month,
                 s.TotalShifts,
@@ -122,8 +123,6 @@ namespace EvergreenRanch.Controllers
 
             return View(model);
         }
-
-
         // GET: Request shift change
         public async Task<IActionResult> RequestChange(int id)
         {
@@ -280,9 +279,10 @@ namespace EvergreenRanch.Controllers
         public async Task<IActionResult> PayWorker(string workerId)
         {
             double hourlyRate = 120.0; // Example rate
-            var totalHours = await _context.ShiftAttendances
-                .Where(a => a.WorkerId == workerId)
-                .SumAsync(a => a.TotalHours);
+            var totalHours = (await _context.ShiftAttendances
+     .Where(s => s.WorkerId == workerId)
+     .ToListAsync())
+     .Sum(s => s.TotalHours);
 
             var totalPay = Math.Round(totalHours * hourlyRate, 2);
 
@@ -299,9 +299,12 @@ namespace EvergreenRanch.Controllers
             _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Payment recorded successfully!";
+            TempData["PaymentSuccess"] = "Worker has been paid successfully.";
             return RedirectToAction(nameof(Summary));
+
         }
+
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PaymentHistory()
         {

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<EvergreenRanch.Models.TrainingSession>
+@{
+    ViewData["Title"] = "Training Calendar";
+    bool isAdmin = User.IsInRole("Admin");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (isAdmin)
+{
+    <a class="btn btn-success mb-3" asp-action="Create">+ Schedule Training</a>
+}
+
+<div id="calendar"></div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                selectable: false,
+                height: 'auto',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [
+                    @foreach (var s in Model)
+                    {
+                            <text>
+                            {
+                                title: '@s.Title',
+                                start: '@s.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")',
+                                end: '@s.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")',
+                                url: '@Url.Action("Details", "TrainingSessions", new { id = s.Id })',
+                                backgroundColor: '#28a745',
+                                borderColor: '#218838',
+                                textColor: 'white'
+                            },
+                            </text>
+                    }
+                ],
+                eventClick: function (info) {
+                    info.jsEvent.preventDefault();
+                    if (info.event.url) {
+                        window.location.href = info.event.url;
+                    }
+                },
+                dateClick: function (info) {
+                    @* Only admins can add new sessions *@
+                    if (@isAdmin.ToString().ToLower()) {
+                        window.location.href = '@Url.Action("Create", "TrainingSessions")' + '?start=' + info.dateStr;
+                    }
+                }
+            });
+            calendar.render();
+        });
+    </script>
+}

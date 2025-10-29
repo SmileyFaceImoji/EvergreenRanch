@@ -1,0 +1,36 @@
+﻿@using EvergreenRanch.Models
+@model IEnumerable<TrainingSession>
+
+<h2>Scheduled Trainings</h2>
+
+<a class="btn btn-success mb-3" asp-action="Create">+ Schedule Training</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Location</th>
+            <th>Course</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Title</td>
+                <td>@s.StartDate.ToString("dd MMM yyyy HH:mm")</td>
+                <td>@s.EndDate.ToString("dd MMM yyyy HH:mm")</td>
+                <td>@s.Location</td>
+                <td>@s.Course?.Title ?? "N/A"</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<li class="nav-item">
+    <a class="nav-link" asp-controller="TrainingSessions" asp-action="Calendar">
+        <i class="bi bi-calendar"></i> Calendar View
+    </a>
+</li>
+

@@ -38,7 +38,7 @@ namespace EvergreenRanch.Data
 
 
 - **Types of Feed:**
-  1. * *Roughage:**Grass, hay, and haylage — forms the majority of a horse’s diet(at least 60 %).
+  1. * *Roughage:**Grass, hay, and haylage — forms the majority of a horse's diet(at least 60 %).
   2. * *Concentrates:**Grains and pelleted feeds for additional energy.
   3. * *Supplements:**Vitamins, minerals, and electrolytes for specific needs.
 
@@ -55,7 +55,7 @@ namespace EvergreenRanch.Data
   - Use separate buckets for each horse to avoid conflict.
 
 ### Key Insight:
-A horse’s health mirrors its diet.A shiny coat, steady energy, and calm temperament often mean proper feeding."
+A horse's health mirrors its diet.A shiny coat, steady energy, and calm temperament often mean proper feeding."
                      },
                     new Module { CourseId = stableCourse.Id, Title = "Stable Hygiene", Content = @"
 Stable hygiene directly influences horse welfare and disease prevention. One overlooked stall can become a breeding ground for bacteria or parasites that spread across the facility.
@@ -89,7 +89,7 @@ Stable hygiene directly influences horse welfare and disease prevention. One ove
 A clean stable not only prevents illness but also reduces stress in horses, improving their behavior and performance."
                      },
                     new Module { CourseId = stableCourse.Id, Title = "Health Checks", Content =@"
-Early detection of health problems can save a horse’s life. Horses hide pain instinctively, so recognizing subtle signs is key.
+Early detection of health problems can save a horse's life. Horses hide pain instinctively, so recognizing subtle signs is key.
 
 ### Vital Signs (Know These Numbers):
 - **Temperature:** 37.5°C – 38.5°C
@@ -108,7 +108,7 @@ Early detection of health problems can save a horse’s life. Horses hide pain i
 1. Inspect the horse before and after work.
 2. Check eyes, nose, and hooves.
 3. Feel the legs for heat or swelling.
-4. Keep logs for each horse’s health and behavior patterns.
+4. Keep logs for each horse's health and behavior patterns.
 
 ### Common Ailments:
 - **Colic:** Abdominal pain — requires immediate attention.
@@ -120,7 +120,7 @@ Recognizing illness early can prevent suffering and expensive veterinary bills."
                      },
 
                     new Module { CourseId = ridingCourse.Id, Title = "Posture and Balance", Content = @"
-The foundation of good riding is posture. A rider’s balance influences the horse’s comfort, movement, and trust.
+The foundation of good riding is posture. A rider's balance influences the horse's comfort, movement, and trust.
 
 ### Correct Posture Checklist:
 - Sit tall, shoulders relaxed but open.
@@ -152,7 +152,7 @@ Communication between rider and horse relies on subtlety. The less visible your 
 2. Work on circles and serpentines for flexibility.
 3. Ride without reins (under supervision) to improve balance and trust.
 
-A truly skilled rider appears to communicate effortlessly — that’s your goal."
+A truly skilled rider appears to communicate effortlessly — that's your goal."
                      },
                     new Module { CourseId = ridingCourse.Id, Title = "Advanced Maneuvers", Content =  @"
 This module introduces professional techniques for competitive or performance riding.
@@ -164,7 +164,7 @@ This module introduces professional techniques for competitive or performance ri
 - **Rollback Turn:** Quick directional shift used in show jumping.
 - **Jumping Basics:** Take-off, landing, and rider positioning.
 
-Each exercise strengthens your control and builds your horse’s agility and confidence."
+Each exercise strengthens your control and builds your horse's agility and confidence."
                     }
                 };
                 await db.Modules.AddRangeAsync(modules);
@@ -200,19 +200,19 @@ Each exercise strengthens your control and builds your horse’s agility and con
                         Choices = new[] { "Walking in circles", "Horse side-stepping and stops", "Feeding horse treats", "Changing saddle often" },
                         CorrectAnswerIndex = 1
                     },
-                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What should make up the majority of a horse’s diet?", Choices = new[] { "Grains", "Roughage (hay/grass)", "Supplements", "Fruits" }, CorrectAnswerIndex = 1 },
+                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What should make up the majority of a horse's diet?", Choices = new[] { "Grains", "Roughage (hay/grass)", "Supplements", "Fruits" }, CorrectAnswerIndex = 1 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "How often should stalls be cleaned?", Choices = new[] { "Daily", "Every 3 days", "Once a week", "Once a month" }, CorrectAnswerIndex = 0 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What is the normal pulse rate for a healthy adult horse?", Choices = new[] { "10–15 bpm", "28–44 bpm", "50–60 bpm", "70–90 bpm" }, CorrectAnswerIndex = 1 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What should you do first during a fire emergency?", Choices = new[] { "Run for help", "Release all horses", "Calmly lead horses to safety one at a time", "Hide in the office" }, CorrectAnswerIndex = 2 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "Which of these is a key sign of laminitis?", Choices = new[] { "Swollen eyes", "Hoof heat and reluctance to move", "Dry coat", "Loss of appetite" }, CorrectAnswerIndex = 1 },
 
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Where should your heels be during proper posture?", Choices = new[] { "Up", "Flat", "Down", "Doesn't matter" }, CorrectAnswerIndex = 2 },
-                    new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Which cue uses the rider’s weight to guide the horse?", Choices = new[] { "Voice", "Seat", "Reins", "Legs" }, CorrectAnswerIndex = 1 },
+                    new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Which cue uses the rider's weight to guide the horse?", Choices = new[] { "Voice", "Seat", "Reins", "Legs" }, CorrectAnswerIndex = 1 },
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "A flying lead change is performed during which gait?", Choices = new[] { "Walk", "Trot", "Canter", "Gallop" }, CorrectAnswerIndex = 2 },
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "What is the correct action when passing another rider in the arena?", Choices = new[] { "Pass on the left", "Pass on the right", "Shout to warn them", "Stop and wait" }, CorrectAnswerIndex = 0 },
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Why is tack inspection important?", Choices = new[] { "To keep it shiny", "To prevent equipment failure and injury", "To impress others", "To follow tradition" }, CorrectAnswerIndex = 1 },
  // Stable Management
-                    new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What is the ideal ratio of roughage to concentrates in a horse’s diet?", Choices = new[] { "90:10", "70:30", "60:40", "40:60" }, CorrectAnswerIndex = 2 },
+                    new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What is the ideal ratio of roughage to concentrates in a horse's diet?", Choices = new[] { "90:10", "70:30", "60:40", "40:60" }, CorrectAnswerIndex = 2 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "How many liters of water should a 500kg horse drink daily?", Choices = new[] { "5–10", "10–20", "20–40", "50–70" }, CorrectAnswerIndex = 2 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "What causes colic most often?", Choices = new[] { "Dirty bedding", "Sudden diet change", "Cold weather", "Short grooming" }, CorrectAnswerIndex = 1 },
                     new TestQuestion { CourseId = stableCourse.Id, QuestionText = "When should stalls be disinfected?", Choices = new[] { "Once a month", "Once a week", "After every new horse", "Only during summer" }, CorrectAnswerIndex = 2 },
@@ -237,12 +237,14 @@ Each exercise strengthens your control and builds your horse’s agility and con
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "What does proper breathing do for the rider?", Choices = new[] { "Increases stamina and keeps rhythm", "Makes the horse sleepy", "Cools the saddle", "Improves vision" }, CorrectAnswerIndex = 0 },
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "When riding in groups, the safest distance between horses is:", Choices = new[] { "1 meter", "A horse length", "Half a meter", "Touching nose to tail" }, CorrectAnswerIndex = 1 },
                     new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Which maneuver helps improve lateral flexibility?", Choices = new[] { "Leg yield", "Reverse turn", "Jumping", "Backing up" }, CorrectAnswerIndex = 0 },
-                    new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Why should reins not be held too tightly?", Choices = new[] { "It causes pain and loss of communication", "It looks unprofessional", "It slows down speed", "It’s unsafe for jumping" }, CorrectAnswerIndex = 0 }
+                    new TestQuestion { CourseId = ridingCourse.Id, QuestionText = "Why should reins not be held too tightly?", Choices = new[] { "It causes pain and loss of communication", "It looks unprofessional", "It slows down speed", "It's unsafe for jumping" }, CorrectAnswerIndex = 0 }
 
                 };
                 await db.TestQuestions.AddRangeAsync(testQuestions);
                 await db.SaveChangesAsync();
-            }// ✅ TEMPORARY: Give every worker 20 leave days for the year so far
+            }
+
+            // ✅ TEMPORARY: Give every worker 20 leave days for the year so far
             var workers = await userManager.GetUsersInRoleAsync("Worker");
 
             foreach (var worker in workers)
@@ -269,6 +271,84 @@ Each exercise strengthens your control and builds your horse’s agility and con
 
             await db.SaveChangesAsync();
 
+            // ✅ Give every worker 5 hours of work time by creating shift attendances
+            foreach (var worker in workers)
+            {
+                // Check if worker already has at least 5 hours of attendance
+                var totalHours = await db.ShiftAttendances
+                    .Where(a => a.WorkerId == worker.Id)
+                    .SumAsync(a =>
+    a.ClockOutTime.HasValue
+        ? (a.ClockOutTime.Value - a.ClockInTime).TotalHours
+        : 0
+);
+
+                if (totalHours < 5)
+                {
+                    // Create a shift specifically to reach 5 hours
+                    var shift = new Shift
+                    {
+                        WorkerId = worker.Id,
+                        StartTime = DateTime.Today.AddHours(8), // 8:00 AM today
+                        EndTime = DateTime.Today.AddHours(13),  // 1:00 PM (5 hours)
+                        Location = "Main Stable",
+                        Description = "Initial training shift"
+                    };
+
+                    await db.Shifts.AddAsync(shift);
+                    await db.SaveChangesAsync(); // Save to get shift ID
+
+                    // Create attendance for this shift
+                    db.ShiftAttendances.Add(new ShiftAttendance
+                    {
+                        ShiftId = shift.Id,
+                        WorkerId = worker.Id,
+                        ClockInTime = shift.StartTime,
+                        ClockOutTime = shift.EndTime
+                    });
+                }
+            }
+
+            await db.SaveChangesAsync();
+
+            // ✅ ADD 48-HOUR SHIFT FOR ALL WORKERS
+            foreach (var worker in workers)
+            {
+                // Check if worker already has a 48-hour shift to avoid duplicates
+                var existing48HourShift = await db.Shifts
+                    .FirstOrDefaultAsync(s => s.WorkerId == worker.Id &&
+                                            (s.EndTime - s.StartTime).TotalHours == 48);
+
+                if (existing48HourShift == null)
+                {
+                    // Create 48-hour shift starting tomorrow at 8:00 AM
+                    var startTime = DateTime.Today.AddDays(1).AddHours(8);
+                    var endTime = startTime.AddHours(48);
+
+                    var longShift = new Shift
+                    {
+                        WorkerId = worker.Id,
+                        StartTime = startTime,
+                        EndTime = endTime,
+                        Location = "Emergency Coverage - All Areas",
+                        Description = "48-hour extended coverage shift for special event"
+                    };
+
+                    await db.Shifts.AddAsync(longShift);
+                    await db.SaveChangesAsync(); // Save to get shift ID
+
+                    // Create attendance record for the 48-hour shift
+                    db.ShiftAttendances.Add(new ShiftAttendance
+                    {
+                        ShiftId = longShift.Id,
+                        WorkerId = worker.Id,
+                        ClockInTime = startTime,
+                        ClockOutTime = endTime
+                    });
+                }
+            }
+
+            await db.SaveChangesAsync();
 
             // ✅ Seed default shifts for all existing workers
             await SeedDefaultShiftsAsync(db, userManager);
@@ -333,6 +413,38 @@ Each exercise strengthens your control and builds your horse’s agility and con
             }
 
             await db.Shifts.AddRangeAsync(shifts);
+
+            // ✅ Ensure each worker has at least 5 hours of attendance logged
+            var allShifts = await db.Shifts.ToListAsync();
+
+            foreach (var worker in workers)
+            {
+                // Check if the worker already has attendance records
+                var existingAttendances = await db.ShiftAttendances
+                    .Where(a => a.WorkerId == worker.Id)
+                    .ToListAsync();
+
+                if (!existingAttendances.Any())
+                {
+                    // Find up to 2 shifts per worker to total around 5 hours minimum
+                    var assignedShifts = allShifts
+                        .Where(s => s.WorkerId == worker.Id)
+                        .Take(2)
+                        .ToList();
+
+                    foreach (var shift in assignedShifts)
+                    {
+                        db.ShiftAttendances.Add(new ShiftAttendance
+                        {
+                            ShiftId = shift.Id,
+                            WorkerId = worker.Id,
+                            ClockInTime = shift.StartTime,
+                            ClockOutTime = shift.StartTime.AddHours(2.5) // ~2.5 hours per shift → 5h total
+                        });
+                    }
+                }
+            }
+
             await db.SaveChangesAsync();
         }
 
@@ -381,18 +493,46 @@ Each exercise strengthens your control and builds your horse’s agility and con
 
             await db.Shifts.AddRangeAsync(shifts);
             await db.SaveChangesAsync();
+
+            // ✅ ADD 48-HOUR SHIFT FOR THE NEW WORKER
+            var startTime = DateTime.Today.AddDays(1).AddHours(8);
+            var endTime = startTime.AddHours(48);
+
+            var longShift = new Shift
+            {
+                WorkerId = userId,
+                StartTime = startTime,
+                EndTime = endTime,
+                Location = "Emergency Coverage - All Areas",
+                Description = "48-hour extended coverage shift for special event"
+            };
+
+            await db.Shifts.AddAsync(longShift);
+            await db.SaveChangesAsync(); // Save to get shift ID
+
+            // Create attendance record for the 48-hour shift
+            db.ShiftAttendances.Add(new ShiftAttendance
+            {
+                ShiftId = longShift.Id,
+                WorkerId = userId,
+                ClockInTime = startTime,
+                ClockOutTime = endTime
+            });
+
+            await db.SaveChangesAsync();
+
             // Seed attendances for each shift so payments work
-            var allShifts = await db.Shifts.ToListAsync();
+            var allShifts = await db.Shifts.Where(s => s.WorkerId == userId).ToListAsync();
 
             foreach (var shift in allShifts)
             {
-                // Only create attendance if none exists
-                if (!await db.ShiftAttendances.AnyAsync(a => a.ShiftId == shift.Id))
+                // Only create attendance if none exists (for regular shifts)
+                if (!await db.ShiftAttendances.AnyAsync(a => a.ShiftId == shift.Id && (shift.EndTime - shift.StartTime).TotalHours != 48))
                 {
                     db.ShiftAttendances.Add(new ShiftAttendance
                     {
                         ShiftId = shift.Id,
-                        WorkerId = shift.WorkerId,
+                        WorkerId = userId,
                         ClockInTime = shift.StartTime,
                         ClockOutTime = shift.EndTime
                     });
@@ -400,7 +540,6 @@ Each exercise strengthens your control and builds your horse’s agility and con
             }
 
             await db.SaveChangesAsync();
-
         }
     }
 }

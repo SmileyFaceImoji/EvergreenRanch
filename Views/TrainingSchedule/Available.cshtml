@@ -1,0 +1,49 @@
+﻿@model IEnumerable<TrainingSession>
+@{
+    var registered = ViewBag.RegisteredIds as List<int> ?? new();
+}
+
+<h2>Upcoming Training Sessions</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Location</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.Title</td>
+                <td>@t.StartDate.ToString("dd MMM yyyy HH:mm")</td>
+                <td>@t.EndDate.ToString("dd MMM yyyy HH:mm")</td>
+                <td>@t.Location</td>
+                <td>
+                    @if (registered.Contains(t.Id))
+                    {
+                        <span class="text-success">Applied</span>
+                    }
+                    else
+                    {
+                        <a asp-controller="WorkerApplication"
+                           asp-action="Apply"
+                           class="btn btn-primary btn-sm">
+                            Apply
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<li class="nav-item">
+    <a class="nav-link" asp-controller="TrainingSession" asp-action="Calendar">
+        <i class="bi bi-calendar"></i> Calendar View
+    </a>
+</li>
+

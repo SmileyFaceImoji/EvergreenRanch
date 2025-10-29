@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql3": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('serviceConnectorResourceGroupName')]/providers/Microsoft.Web/sites/EvergreenRanch20251029023519/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDatabaseConnection2_4565407FA4",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/evergreenranchdbserver/databases/EvergreenRanch_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DatabaseConnection2"
+    }
+  }
+}

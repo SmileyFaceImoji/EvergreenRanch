@@ -1,0 +1,51 @@
+﻿@model EvergreenRanch.Models.TrainingSession
+
+@{
+    ViewData["Title"] = "Schedule New Training Session";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post" class="mt-3">
+    <div class="form-group mb-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="StartDate" class="form-label">Start Date & Time</label>
+        <input asp-for="StartDate" type="datetime-local" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="EndDate" class="form-label">End Date & Time</label>
+        <input asp-for="EndDate" type="datetime-local" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Location" class="form-label">Location</label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="CourseId" class="form-label">Linked Course (optional)</label>
+        <input asp-for="CourseId" type="number" class="form-control" placeholder="Enter course ID or leave blank" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Training Session</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

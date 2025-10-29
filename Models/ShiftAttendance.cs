@@ -13,6 +13,8 @@ namespace EvergreenRanch.Models
         [ForeignKey(nameof(ShiftId))]
         public virtual Shift Shift { get; set; } = default!;
 
+        public double hourlyRate { get; set; }=120.00;
+
         public string WorkerId { get; set; } = default!;
 
         public DateTime ClockInTime { get; set; }

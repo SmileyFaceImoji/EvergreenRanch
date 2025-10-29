@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EvergreenRanch</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EvergreenRanch.styles.css" asp-append-version="true" />
@@ -46,10 +48,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Returns" asp-action="Index">My Returns</a>
                             </li>
                         }
-                        @if (User.IsInRole("Admin") || User.IsInRole("Worker"))
+                        @if (User.IsInRole("Admin") )
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Vet" asp-action="Index">Vet</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TrainingSchedule" asp-action="Index">Schedule Training</a>
                             </li>
                         }
                         @if (!User.IsInRole("Admin"))
@@ -68,6 +70,13 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="WorkerTasks" asp-action="MyTasks">Worker Tasks</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Worker"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TrainingSchedule" asp-action="Available">New Training</a>
                             </li>
                         }
 
@@ -114,6 +123,14 @@
                         }
 
 
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Shift" asp-action="Summary">Shift Summary</a>
+                            </li>
+                        }
+
+
 
                     </ul>
                     <partial name="_LoginPartial" />
@@ -135,6 +152,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
